@@ -60,7 +60,7 @@ void MainView::resizeGL(int newWidth, int newHeight) {
 
 void MainView::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     glBindVertexArray(VAOname);
     shader.bind();
