@@ -38,7 +38,6 @@ void MainView::initializeGL() {
     shader.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/vertshader.glsl");
     shader.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/fragshader.glsl");
     shader.link();
-    shader.bind();
 
     glBindVertexArray(VAOname);
     glBindBuffer(GL_ARRAY_BUFFER, VBOname);
@@ -56,7 +55,11 @@ void MainView::resizeGL(int newWidth, int newHeight) {
 }
 
 void MainView::paintGL() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glBindVertexArray(VAOname);
 
+    shader.bind();
+    glDrawArrays(GL_TRIANGLES, 0, 2);
 }
 
 void MainView::onMessageLogged(QOpenGLDebugMessage Message) {
