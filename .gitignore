@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Course
+*.pro.user
+CMakeLists.txt.user
+__MACOSX
+*.DS_Store
