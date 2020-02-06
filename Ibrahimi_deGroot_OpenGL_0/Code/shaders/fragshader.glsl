@@ -5,5 +5,5 @@ out vec4 pixelRGBA;
 
 void main()
 {
-
+    pixelRGBA = vec4(interpolatedColor, 1);
 }

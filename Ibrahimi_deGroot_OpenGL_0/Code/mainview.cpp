@@ -7,7 +7,8 @@ MainView::MainView(QWidget *parent) : QOpenGLWidget(parent) {
 
 MainView::~MainView() {
     qDebug() << "MainView destructor";
-
+    glDeleteBuffers(1, &VBOname);
+    glDeleteVertexArrays(1, &VAOname);
     makeCurrent();
 }
 
@@ -35,12 +36,15 @@ void MainView::initializeGL() {
 
     glGenBuffers(1, &VBOname);
     glGenVertexArrays(1, &VAOname);
+
     shader.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/vertshader.glsl");
     shader.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/fragshader.glsl");
     shader.link();
+    shader.bind();
 
     glBindVertexArray(VAOname);
     glBindBuffer(GL_ARRAY_BUFFER, VBOname);
+    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex), vertices, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(0));
@@ -50,16 +54,18 @@ void MainView::initializeGL() {
 }
 
 void MainView::resizeGL(int newWidth, int newHeight) {
-    Q_UNUSED(newWidth)
-    Q_UNUSED(newHeight)
+    Q_UNUSED(newWidth);
+    Q_UNUSED(newHeight);
 }
 
 void MainView::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glBindVertexArray(VAOname);
+//    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+    glBindVertexArray(VAOname);
     shader.bind();
-    glDrawArrays(GL_TRIANGLES, 0, 2);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void MainView::onMessageLogged(QOpenGLDebugMessage Message) {
