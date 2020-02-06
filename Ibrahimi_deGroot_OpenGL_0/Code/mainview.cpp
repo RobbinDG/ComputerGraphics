@@ -1,4 +1,5 @@
 #include "mainview.h"
+#include "Vertex.h"
 
 MainView::MainView(QWidget *parent) : QOpenGLWidget(parent) {
     qDebug() << "MainView constructor";
@@ -25,6 +26,14 @@ void MainView::initializeGL() {
     QString glVersion;
     glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
     qDebug() << ":: Using OpenGL" << qPrintable(glVersion);
+
+    Vertex r = {-1, -1, 1, 0, 0};
+    Vertex g = {1, -1, 0, 1, 0};
+    Vertex b = {0, 1, 0, 0, 1};
+
+    Vertex vertices[3] = {r, g, b};
+
+
 }
 
 void MainView::resizeGL(int newWidth, int newHeight) {

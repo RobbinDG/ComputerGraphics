@@ -14,6 +14,7 @@ SOURCES += \
     user_input.cpp
 
 HEADERS += \
+    Vertex.h \
     mainwindow.h \
     mainview.h
 
