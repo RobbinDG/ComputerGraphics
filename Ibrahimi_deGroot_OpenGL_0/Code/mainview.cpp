@@ -33,6 +33,20 @@ void MainView::initializeGL() {
 
     Vertex vertices[3] = {r, g, b};
 
+    glGenBuffers(1, &VBOname);
+    glGenVertexArrays(1, &VAOname);
+    shader.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/vertshader.glsl");
+    shader.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/fragshader.glsl");
+    shader.link();
+    shader.bind();
+
+    glBindVertexArray(VAOname);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOname);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(0));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(2 * sizeof(float)));
 
 }
 
