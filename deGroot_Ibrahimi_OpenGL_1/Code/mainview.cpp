@@ -1,3 +1,4 @@
+#include "Vertex.h"
 #include "mainview.h"
 
 #include <QDateTime>
@@ -25,7 +26,8 @@ MainView::MainView(QWidget *parent) : QOpenGLWidget(parent) {
  */
 MainView::~MainView() {
     qDebug() << "MainView destructor";
-
+    glDeleteBuffers(1, &VBOcube);
+    glDeleteVertexArrays(1, &VAOcube);
     makeCurrent();
 }
 
@@ -66,6 +68,74 @@ void MainView::initializeGL() {
     glClearColor(0.2f, 0.5f, 0.7f, 0.0f);
 
     createShaderProgram();
+
+    Vertex cube[] = {
+        {1,1,1,1,0,0},
+        {1,1,-1,0,1,0},
+        {1,-0,1,0,0,1},
+        {1,-0,-1,1,0,0},
+        {-1,1,1,0,1,0},
+        {-1,1,-1,0,0,1},
+        {-1,-0,1,1,0,0},
+        {-1,-0,-1,0,1,0}
+    };
+
+    Vertex pyramid[] = {
+        {0,1,0,1,0,0},
+        {1,-1,1,0,1,0},
+        {1,-1,-1,0,0,1},
+        {-1,-1,1,1,0,0},
+        {-1,-1,-1,0,1,0},
+    };
+
+    Vertex triangulatedCube[] {
+        cube[0], cube[1], cube[3],
+        cube[0], cube[3], cube[2],
+        cube[0], cube[2], cube[6],
+        cube[0], cube[6], cube[4],
+        cube[4], cube[6], cube[5],
+        cube[5], cube[7], cube[6],
+        cube[1], cube[7], cube[3],
+        cube[1], cube[5], cube[7],
+        cube[0], cube[5], cube[1],
+        cube[1], cube[4], cube[5],
+        cube[2], cube[3], cube[6],
+        cube[3], cube[7], cube[6],
+    };
+
+    Vertex triangulatedPyramid[] = {
+        pyramid[0], pyramid[2], pyramid[1],
+        pyramid[0], pyramid[1], pyramid[3],
+        pyramid[0], pyramid[3], pyramid[4],
+        pyramid[0], pyramid[4], pyramid[2],
+        pyramid[1], pyramid[4], pyramid[3],
+        pyramid[1], pyramid[2], pyramid[4],
+    };
+
+    glGenBuffers(1, &VBOcube);
+    glGenBuffers(1, &VBOpyr);
+    glGenVertexArrays(1, &VAOcube);
+    glGenVertexArrays(1, &VAOpyr);
+
+
+    glBindVertexArray(VAOcube);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOcube);
+    glBufferData(GL_ARRAY_BUFFER, 12 * 3 * sizeof(Vertex), triangulatedCube, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(0));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(3 * sizeof(float)));
+
+    glBindVertexArray(VAOpyr);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOpyr);
+    glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(Vertex), triangulatedPyramid, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(0));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(3 * sizeof(float)));
+
 }
 
 void MainView::createShaderProgram() {
@@ -88,10 +158,15 @@ void MainView::createShaderProgram() {
 void MainView::paintGL() {
     // Clear the screen before rendering
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     shaderProgram.bind();
 
-    // Draw here
+    glBindVertexArray(VAOcube);
+    glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
+
+    glBindVertexArray(VAOpyr);
+    glDrawArrays(GL_TRIANGLES, 0, 6 * 3);
 
     shaderProgram.release();
 }
@@ -139,3 +214,4 @@ void MainView::setShadingMode(ShadingMode shading) {
 void MainView::onMessageLogged( QOpenGLDebugMessage Message ) {
     qDebug() << " → Log:" << Message;
 }
+

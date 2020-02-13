@@ -15,6 +15,7 @@ SOURCES += \
     model.cpp
 
 HEADERS += \
+    Vertex.h \
     mainwindow.h \
     mainview.h \
     model.h

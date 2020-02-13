@@ -52,6 +52,8 @@ private:
     QOpenGLDebugLogger debugLogger;
     QTimer timer; // timer used for animation
 
+    GLuint VBOcube, VBOpyr, VAOcube, VAOpyr;
+
     QOpenGLShaderProgram shaderProgram;
 
     void createShaderProgram();
