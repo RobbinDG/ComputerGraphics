@@ -2,6 +2,7 @@
 #include "mainview.h"
 
 #include <QDateTime>
+#include <iostream>
 
 /**
  * @brief MainView::MainView
@@ -67,17 +68,19 @@ void MainView::initializeGL() {
     // Set the color to be used by glClear. This is, effectively, the background color.
     glClearColor(0.2f, 0.5f, 0.7f, 0.0f);
 
+//    glEnable(GL_CULL_FACE);
+
     createShaderProgram();
 
     Vertex cube[] = {
         {1,1,1,1,0,0},
         {1,1,-1,0,1,0},
-        {1,-0,1,0,0,1},
-        {1,-0,-1,1,0,0},
+        {1,-1,1,0,0,1},
+        {1,-1,-1,1,0,0},
         {-1,1,1,0,1,0},
         {-1,1,-1,0,0,1},
-        {-1,-0,1,1,0,0},
-        {-1,-0,-1,0,1,0}
+        {-1,-1,1,1,0,0},
+        {-1,-1,-1,0,1,0}
     };
 
     Vertex pyramid[] = {
@@ -112,6 +115,28 @@ void MainView::initializeGL() {
         pyramid[1], pyramid[2], pyramid[4],
     };
 
+    cubeTranslate = QMatrix4x4(
+                1,0,0,2,
+                0,1,0,0,
+                0,0,1,-6,
+                0,0,0,1
+    );
+
+    pyrTranslate = QMatrix4x4(
+                1,0,0,-2,
+                0,1,0,0,
+                0,0,1,-6,
+                0,0,0,1
+    );
+
+    float n = 5.0, f = 7.0, t = 3.0, b = -3.0, l = -4.0, r = 4.0;
+    projection = QMatrix4x4(
+                2*n/(r-l),0,(r+l)/(r-l),0,
+                0,2*n/(t-b),(t+b)/(t-b),0,
+                0,0,(n+f)/(n-f),(2*f*n)/(n-f),
+                0,0,-1,0
+    );
+
     glGenBuffers(1, &VBOcube);
     glGenBuffers(1, &VBOpyr);
     glGenVertexArrays(1, &VAOcube);
@@ -135,7 +160,6 @@ void MainView::initializeGL() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(0));
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(3 * sizeof(float)));
-
 }
 
 void MainView::createShaderProgram() {
@@ -145,6 +169,10 @@ void MainView::createShaderProgram() {
     shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment,
                                            ":/shaders/fragshader.glsl");
     shaderProgram.link();
+
+    modelTransform = shaderProgram.uniformLocation("modelTransform");
+    projectTransform = shaderProgram.uniformLocation("projectTransform");
+    std::cout << modelTransform << " " << projectTransform << std::endl;
 }
 
 // --- OpenGL drawing
@@ -158,12 +186,16 @@ void MainView::createShaderProgram() {
 void MainView::paintGL() {
     // Clear the screen before rendering
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     shaderProgram.bind();
 
+    glUniformMatrix4fv(projectTransform, 1, GL_FALSE, projection.data());
+    glUniformMatrix4fv(modelTransform, 1, GL_FALSE, cubeTranslate.data());
+
     glBindVertexArray(VAOcube);
     glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
+
+    glUniformMatrix4fv(modelTransform, 1, GL_FALSE, pyrTranslate.data());
 
     glBindVertexArray(VAOpyr);
     glDrawArrays(GL_TRIANGLES, 0, 6 * 3);

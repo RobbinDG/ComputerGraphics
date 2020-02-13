@@ -53,6 +53,9 @@ private:
     QTimer timer; // timer used for animation
 
     GLuint VBOcube, VBOpyr, VAOcube, VAOpyr;
+    GLint modelTransform, projectTransform;
+    QMatrix4x4 cubeTranslate, pyrTranslate;
+    QMatrix4x4 projection;
 
     QOpenGLShaderProgram shaderProgram;
 
