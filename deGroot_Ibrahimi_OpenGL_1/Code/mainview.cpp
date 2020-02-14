@@ -135,24 +135,17 @@ void MainView::initializeGL() {
                 0,0,-1,0
     );
 
-    glGenBuffers(1, &VBOcube);
-    glGenBuffers(1, &VBOpyr);
-    glGenVertexArrays(1, &VAOcube);
-    glGenVertexArrays(1, &VAOpyr);
+    setupVBOVAO(VBOcube, VAOcube, triangulatedCube, 12);
+    setupVBOVAO(VBOpyr, VAOpyr, triangulatedPyramid, 6);
+}
 
+void MainView::setupVBOVAO(GLuint& VBO, GLuint& VAO, Vertex shape[], int triangles) {
+    glGenBuffers(1, &VBO);
+    glGenVertexArrays(1, &VAO);
 
-    glBindVertexArray(VAOcube);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOcube);
-    glBufferData(GL_ARRAY_BUFFER, 12 * 3 * sizeof(Vertex), triangulatedCube, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(0));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(3 * sizeof(float)));
-
-    glBindVertexArray(VAOpyr);
-    glBindBuffer(GL_ARRAY_BUFFER, VBOpyr);
-    glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(Vertex), triangulatedPyramid, GL_STATIC_DRAW);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, triangles * 3 * sizeof(Vertex), shape, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(0));

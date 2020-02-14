@@ -2,6 +2,7 @@
 #define MAINVIEW_H
 
 #include "model.h"
+#include "Vertex.h"
 
 #include <QKeyEvent>
 #include <QMouseEvent>
@@ -56,6 +57,8 @@ private:
     GLint modelTransform, projectTransform;
     QMatrix4x4 cubeTranslate, pyrTranslate;
     QMatrix4x4 projection;
+
+    void setupVBOVAO(GLuint& VBO, GLuint& VAO, Vertex shape[], int triangles);
 
     QOpenGLShaderProgram shaderProgram;
 
