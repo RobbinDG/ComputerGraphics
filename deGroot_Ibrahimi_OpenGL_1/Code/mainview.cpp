@@ -68,8 +68,6 @@ void MainView::initializeGL() {
     // Set the color to be used by glClear. This is, effectively, the background color.
     glClearColor(0.2f, 0.5f, 0.7f, 0.0f);
 
-//    glEnable(GL_CULL_FACE);
-
     createShaderProgram();
 
     Vertex cube[] = {
@@ -92,27 +90,27 @@ void MainView::initializeGL() {
     };
 
     Vertex triangulatedCube[] {
-        cube[0], cube[1], cube[3],
-        cube[0], cube[3], cube[2],
-        cube[0], cube[2], cube[6],
-        cube[0], cube[6], cube[4],
-        cube[4], cube[6], cube[5],
+        cube[0], cube[3], cube[1],
+        cube[0], cube[2], cube[3],
+        cube[0], cube[6], cube[2],
+        cube[0], cube[4], cube[6],
+        cube[4], cube[5], cube[6],
         cube[5], cube[7], cube[6],
-        cube[1], cube[7], cube[3],
-        cube[1], cube[5], cube[7],
-        cube[0], cube[5], cube[1],
-        cube[1], cube[4], cube[5],
-        cube[2], cube[3], cube[6],
-        cube[3], cube[7], cube[6],
+        cube[1], cube[3], cube[7],
+        cube[1], cube[7], cube[5],
+        cube[0], cube[1], cube[5],
+        cube[1], cube[5], cube[4],
+        cube[2], cube[6], cube[3],
+        cube[3], cube[6], cube[7],
     };
 
     Vertex triangulatedPyramid[] = {
-        pyramid[0], pyramid[2], pyramid[1],
-        pyramid[0], pyramid[1], pyramid[3],
-        pyramid[0], pyramid[3], pyramid[4],
-        pyramid[0], pyramid[4], pyramid[2],
-        pyramid[1], pyramid[4], pyramid[3],
-        pyramid[1], pyramid[2], pyramid[4],
+        pyramid[0], pyramid[1], pyramid[2],
+        pyramid[0], pyramid[3], pyramid[1],
+        pyramid[0], pyramid[4], pyramid[3],
+        pyramid[0], pyramid[2], pyramid[4],
+        pyramid[1], pyramid[3], pyramid[4],
+        pyramid[1], pyramid[4], pyramid[2],
     };
 
     cubeTranslate = QMatrix4x4(
