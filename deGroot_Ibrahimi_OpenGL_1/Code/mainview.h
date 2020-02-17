@@ -53,12 +53,15 @@ private:
     QOpenGLDebugLogger debugLogger;
     QTimer timer; // timer used for animation
 
-    GLuint VBOcube, VBOpyr, VAOcube, VAOpyr;
+    GLuint VBOcube, VBOpyr, VBOsphere, VAOcube, VAOpyr, VAOsphere;
+    GLfloat scaleFactor, rotX, rotY, rotZ, angle;
     GLint modelTransform, projectTransform;
     QMatrix4x4 cubeTranslate, pyrTranslate;
     QMatrix4x4 projection;
 
     void setupVBOVAO(GLuint& VBO, GLuint& VAO, Vertex shape[], int triangles);
+
+    void setProjection(float left, float right, float bottom, float top, float zNear, float zFar);
 
     QOpenGLShaderProgram shaderProgram;
 

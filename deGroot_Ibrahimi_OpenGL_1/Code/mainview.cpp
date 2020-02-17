@@ -1,8 +1,11 @@
 #include "Vertex.h"
 #include "mainview.h"
-
+#include "model.h"
+#include <math.h>
 #include <QDateTime>
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 /**
  * @brief MainView::MainView
@@ -127,16 +130,34 @@ void MainView::initializeGL() {
                 0,0,0,1
     );
 
-    float n = 5.0, f = 7.0, t = 3.0, b = -3.0, l = -4.0, r = 4.0;
-    projection = QMatrix4x4(
-                2*n/(r-l),0,(r+l)/(r-l),0,
-                0,2*n/(t-b),(t+b)/(t-b),0,
-                0,0,(n+f)/(n-f),(2*f*n)/(n-f),
-                0,0,-1,0
-    );
+    projection.perspective(60, 16.0f/9.0f, 0.01f, 10);
 
     setupVBOVAO(VBOcube, VAOcube, triangulatedCube, 12);
     setupVBOVAO(VBOpyr, VAOpyr, triangulatedPyramid, 6);
+
+    scaleFactor = 1.0;
+    rotX = rotY = rotZ = 0.0;
+
+//    srand(time(NULL));
+
+//    Model sphere = Model(":/models/sphere.obj");
+//    QVector<QVector3D> coordinates = sphere.getVertices();
+//    int size = coordinates.count();
+//    Vertex sphereVertices[size];
+
+//    qDebug() << "Size: " << size;
+
+//    int pos = 0;
+//    for (QVector3D vector : coordinates) {
+//        sphereVertices[pos].x = vector[0];
+//        sphereVertices[pos].y = vector[1];
+//        sphereVertices[pos].z = vector[2];
+//        sphereVertices[pos].r = rand() % 255 + 1;
+//        sphereVertices[pos].g = rand() % 255 + 1;
+//        sphereVertices[pos].b = rand() % 255 + 1;
+//    }
+
+//    setupVBOVAO(VBOsphere, VAOsphere, sphereVertices, size);
 }
 
 void MainView::setupVBOVAO(GLuint& VBO, GLuint& VAO, Vertex shape[], int triangles) {
@@ -163,7 +184,7 @@ void MainView::createShaderProgram() {
 
     modelTransform = shaderProgram.uniformLocation("modelTransform");
     projectTransform = shaderProgram.uniformLocation("projectTransform");
-    std::cout << modelTransform << " " << projectTransform << std::endl;
+    std::cout << "modelTransform: " << modelTransform << ", projectTransform: " << projectTransform << std::endl;
 }
 
 // --- OpenGL drawing
@@ -180,16 +201,33 @@ void MainView::paintGL() {
 
     shaderProgram.bind();
 
+    // Update Project transform
     glUniformMatrix4fv(projectTransform, 1, GL_FALSE, projection.data());
-    glUniformMatrix4fv(modelTransform, 1, GL_FALSE, cubeTranslate.data());
 
+    // First store the translation in the final matrices
+    QMatrix4x4 updatedCube = cubeTranslate;
+    QMatrix4x4 updatedPyr = pyrTranslate;
+
+    // Scale the matrices according to the scaling factor
+    updatedCube.scale(scaleFactor);
+    updatedPyr.scale(scaleFactor);
+
+    // Rotate the matrices according the rotation parameters
+    updatedCube.rotate(angle, rotX, rotY, rotZ);
+    updatedPyr.rotate(angle, rotX, rotY, rotZ);
+
+    // Update Model transform and draw the cube using the final matrices
+    glUniformMatrix4fv(modelTransform, 1, GL_FALSE, updatedCube.data());
     glBindVertexArray(VAOcube);
     glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
 
-    glUniformMatrix4fv(modelTransform, 1, GL_FALSE, pyrTranslate.data());
-
+    // Update Model transform and draw the pyramid using the final matrices
+    glUniformMatrix4fv(modelTransform, 1, GL_FALSE, updatedPyr.data());
     glBindVertexArray(VAOpyr);
     glDrawArrays(GL_TRIANGLES, 0, 6 * 3);
+
+//    glBindVertexArray(VAOsphere);
+//    glDrawArrays(GL_TRIANGLES, 0, 2280 * 3);
 
     shaderProgram.release();
 }
@@ -203,21 +241,36 @@ void MainView::paintGL() {
  * @param newHeight
  */
 void MainView::resizeGL(int newWidth, int newHeight) {
-    // TODO: Update projection to fit the new aspect ratio
-    Q_UNUSED(newWidth)
-    Q_UNUSED(newHeight)
+    // First reset the QMatrix4x4 projection to identity, and get the new perspective projection matrix
+    projection.setToIdentity();
+    projection.perspective(60, (float)newWidth/newHeight, 0.01f, 10.0);
 }
 
 // --- Public interface
 
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ) {
     qDebug() << "Rotation changed to (" << rotateX << "," << rotateY << "," << rotateZ << ")";
-    Q_UNIMPLEMENTED();
+    if (rotX != rotateX) {
+        angle = rotateX;
+    }
+    else if (rotY != rotateY) {
+        angle = rotateY;
+    }
+    else {
+        angle = rotateZ;
+    }
+    rotX = rotateX;
+    rotY = rotateY;
+    rotZ = rotateZ;
+    update();
+//    Q_UNIMPLEMENTED();
 }
 
 void MainView::setScale(int scale) {
-    qDebug() << "Scale changed to " << scale;
-    Q_UNIMPLEMENTED();
+    // Ensures that the scaleFactor is between 0.5 and 1.5
+    scaleFactor = 1 + (scale - 100.0) * 5 / 1000.0;
+
+    update();
 }
 
 void MainView::setShadingMode(ShadingMode shading) {
