@@ -104,6 +104,7 @@ void MainView::initializeGL() {
  * @brief MainView::setupCube Sets the cube
  */
 void MainView::setupCube() {
+    // Describes all 8 vertices of a cube
     std::vector<Vertex> cube = {
         {1,1,1,1,0,0},
         {1,1,-1,0,1,0},
@@ -115,6 +116,7 @@ void MainView::setupCube() {
         {-1,-1,-1,0,1,0}
     };
 
+    // Describes the triangles that make up the cube
     std::vector<Vertex> triangulatedCube {
         // right
         cube[0], cube[3], cube[1],
@@ -143,6 +145,7 @@ void MainView::setupCube() {
  * @brief MainView::setupPyr Sets the pyramid
  */
 void MainView::setupPyr() {
+    // Describes all 8 vertices of a pyramid
     std::vector<Vertex> pyramid = {
         {0,1,0,1,0,0},
         {1,-1,1,0,1,0},
@@ -151,6 +154,7 @@ void MainView::setupPyr() {
         {-1,-1,-1,0,1,0},
     };
 
+    // Describes the triangles that make up the pyramid
     std::vector<Vertex> triangulatedPyramid = {
         pyramid[0], pyramid[1], pyramid[2],
         pyramid[0], pyramid[3], pyramid[1],
