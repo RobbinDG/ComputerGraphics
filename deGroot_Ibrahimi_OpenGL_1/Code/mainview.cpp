@@ -17,7 +17,22 @@
 MainView::MainView(QWidget *parent) : QOpenGLWidget(parent) {
     qDebug() << "MainView constructor";
 
+    scaleFactor = 1.0;
+    rotX = rotY = rotZ = 0.0;
+
     connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
+}
+
+void MainView::deleteVAOs() {
+    glDeleteVertexArrays(1, &VAOcube);
+    glDeleteVertexArrays(1, &VAOpyr);
+    glDeleteVertexArrays(1, &VAOsphere);
+}
+
+void MainView::deleteVBOs() {
+    glDeleteBuffers(1, &VBOcube);
+    glDeleteBuffers(1, &VBOpyr);
+    glDeleteBuffers(1, &VBOsphere);
 }
 
 /**
@@ -30,8 +45,8 @@ MainView::MainView(QWidget *parent) : QOpenGLWidget(parent) {
  */
 MainView::~MainView() {
     qDebug() << "MainView destructor";
-    glDeleteBuffers(1, &VBOcube);
-    glDeleteVertexArrays(1, &VAOcube);
+    deleteVBOs();
+    deleteVAOs();
     makeCurrent();
 }
 
@@ -73,7 +88,23 @@ void MainView::initializeGL() {
 
     createShaderProgram();
 
-    Vertex cube[] = {
+    // Set all objects
+    setupCube();
+    setupPyr();
+    setupSphere();
+
+    // Translate all objects
+    translateObjects();
+
+    // Set the projection perspective
+    projection.perspective(60, 16.0f/9.0f, 0.01f, 10);
+}
+
+/**
+ * @brief MainView::setupCube Sets the cube
+ */
+void MainView::setupCube() {
+    std::vector<Vertex> cube = {
         {1,1,1,1,0,0},
         {1,1,-1,0,1,0},
         {1,-1,1,0,0,1},
@@ -84,15 +115,7 @@ void MainView::initializeGL() {
         {-1,-1,-1,0,1,0}
     };
 
-    Vertex pyramid[] = {
-        {0,1,0,1,0,0},
-        {1,-1,1,0,1,0},
-        {1,-1,-1,0,0,1},
-        {-1,-1,1,1,0,0},
-        {-1,-1,-1,0,1,0},
-    };
-
-    Vertex triangulatedCube[] {
+    std::vector<Vertex> triangulatedCube {
         // right
         cube[0], cube[3], cube[1],
         cube[0], cube[2], cube[3],
@@ -113,7 +136,22 @@ void MainView::initializeGL() {
         cube[3], cube[6], cube[7],
     };
 
-    Vertex triangulatedPyramid[] = {
+    setupVBOVAO(VBOcube, VAOcube, triangulatedCube.data(), 3 * 12);
+}
+
+/**
+ * @brief MainView::setupPyr Sets the pyramid
+ */
+void MainView::setupPyr() {
+    std::vector<Vertex> pyramid = {
+        {0,1,0,1,0,0},
+        {1,-1,1,0,1,0},
+        {1,-1,-1,0,0,1},
+        {-1,-1,1,1,0,0},
+        {-1,-1,-1,0,1,0},
+    };
+
+    std::vector<Vertex> triangulatedPyramid = {
         pyramid[0], pyramid[1], pyramid[2],
         pyramid[0], pyramid[3], pyramid[1],
         pyramid[0], pyramid[4], pyramid[3],
@@ -122,57 +160,55 @@ void MainView::initializeGL() {
         pyramid[1], pyramid[4], pyramid[2],
     };
 
-    cubeTranslate = QMatrix4x4(
-                1,0,0,2,
-                0,1,0,0,
-                0,0,1,-6,
-                0,0,0,1
-    );
-
-    pyrTranslate = QMatrix4x4(
-                1,0,0,-2,
-                0,1,0,0,
-                0,0,1,-6,
-                0,0,0,1
-    );
-
-    projection.perspective(60, 16.0f/9.0f, 0.01f, 10);
-
-    setupVBOVAO(VBOcube, VAOcube, triangulatedCube, 12);
-    setupVBOVAO(VBOpyr, VAOpyr, triangulatedPyramid, 6);
-
-    scaleFactor = 1.0;
-    rotX = rotY = rotZ = 0.0;
-
-//    srand(time(NULL));
-
-//    Model sphere = Model(":/models/sphere.obj");
-//    QVector<QVector3D> coordinates = sphere.getVertices();
-//    int size = coordinates.count();
-//    Vertex sphereVertices[size];
-
-//    qDebug() << "Size: " << size;
-
-//    int pos = 0;
-//    for (QVector3D vector : coordinates) {
-//        sphereVertices[pos].x = vector[0];
-//        sphereVertices[pos].y = vector[1];
-//        sphereVertices[pos].z = vector[2];
-//        sphereVertices[pos].r = rand() % 255 + 1;
-//        sphereVertices[pos].g = rand() % 255 + 1;
-//        sphereVertices[pos].b = rand() % 255 + 1;
-//    }
-
-//    setupVBOVAO(VBOsphere, VAOsphere, sphereVertices, size);
+    setupVBOVAO(VBOpyr, VAOpyr, triangulatedPyramid.data(), 3 * 6);
 }
 
+/**
+ * @brief MainView::setupSphere Sets the sphere
+ */
+void MainView::setupSphere() {
+    srand(time(NULL));
+    Model sphere = Model(":/models/sphere.obj");
+    QVector<QVector3D> coordinates = sphere.getVertices();
+    std::vector<Vertex> sphereVertices;
+    for (QVector3D vector : coordinates) {
+        sphereVertices.push_back({vector.x(), vector.y(), vector.z(), static_cast <float> (rand()) / static_cast <float> (RAND_MAX), static_cast <float> (rand()) / static_cast <float> (RAND_MAX), static_cast <float> (rand()) / static_cast <float> (RAND_MAX)});
+    }
+
+    setupVBOVAO(VBOsphere, VAOsphere, sphereVertices.data(), coordinates.count());
+}
+
+/**
+ * @brief MainView::translateObjects Translates all objects to the appropriate position
+ */
+void MainView::translateObjects() {
+    // Cube
+    cubeTranslate.setToIdentity();
+    cubeTranslate.translate(2, 0, -6);
+
+    // Pyramid
+    pyrTranslate.setToIdentity();
+    pyrTranslate.translate(-2, 0, -6);
+
+    // Sphere
+    sphereTranslate.setToIdentity();
+    sphereTranslate.translate(0, 0, -10);
+}
+
+/**
+ * @brief MainView::setupVBOVAO Sets the VBO and VAO of an object
+ * @param VBO The VBO of the shape
+ * @param VAO The VAO of the shape
+ * @param shape The shape (expressed as a Vertex array)
+ * @param triangles The amount of triangles
+ */
 void MainView::setupVBOVAO(GLuint& VBO, GLuint& VAO, Vertex shape[], int triangles) {
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, triangles * 3 * sizeof(Vertex), shape, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, triangles * sizeof(Vertex), shape, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(0));
@@ -207,35 +243,40 @@ void MainView::paintGL() {
 
     shaderProgram.bind();
 
+    // Create the final matrices from the translated cubes
+    QMatrix4x4 transformCube = createTransformation(cubeTranslate, 1);
+    QMatrix4x4 transformdPyr = createTransformation(pyrTranslate, 1);
+    QMatrix4x4 transformSphere = createTransformation(sphereTranslate, 0.02);
+
+
+    // Update Model transform and draw the object using the final transformation matrices
+    paintObject(transformCube, VAOcube, 12 * 3);
+    paintObject(transformdPyr, VAOpyr, 6 * 3);
+    paintObject(transformSphere, VAOsphere, 760 * 3);
+
+    shaderProgram.release();
+}
+
+void MainView::paintObject(QMatrix4x4 transformation, GLuint VAO, int amountOfTriangles) {
     // Update Project transform
     glUniformMatrix4fv(projectTransform, 1, GL_FALSE, projection.data());
 
-    // First store the translation in the final matrices
-    QMatrix4x4 updatedCube = cubeTranslate;
-    QMatrix4x4 updatedPyr = pyrTranslate;
+    // Update modelTransform and draw the object
+    glUniformMatrix4fv(modelTransform, 1, GL_FALSE, transformation.data());
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, amountOfTriangles);
+}
 
-    // Scale the matrices according to the scaling factor
-    updatedCube.scale(scaleFactor);
-    updatedPyr.scale(scaleFactor);
+QMatrix4x4 MainView::createTransformation(QMatrix4x4 translated, float scaleOffset) {
+    // Scale the matrix according to the scaling factor and offset
+    translated.scale(scaleFactor * scaleOffset);
 
-    // Rotate the matrices according the rotation parameters
-    updatedCube.rotate(angle, rotX, rotY, rotZ);
-    updatedPyr.rotate(angle, rotX, rotY, rotZ);
+    // Rotate the matrix according the rotation parameters
+    translated.rotate(rotX, 1, 0, 0);
+    translated.rotate(rotY, 0, 1, 0);
+    translated.rotate(rotZ, 0, 0, 1);
 
-    // Update Model transform and draw the cube using the final matrices
-    glUniformMatrix4fv(modelTransform, 1, GL_FALSE, updatedCube.data());
-    glBindVertexArray(VAOcube);
-    glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
-
-    // Update Model transform and draw the pyramid using the final matrices
-    glUniformMatrix4fv(modelTransform, 1, GL_FALSE, updatedPyr.data());
-    glBindVertexArray(VAOpyr);
-    glDrawArrays(GL_TRIANGLES, 0, 6 * 3);
-
-//    glBindVertexArray(VAOsphere);
-//    glDrawArrays(GL_TRIANGLES, 0, 2280 * 3);
-
-    shaderProgram.release();
+    return translated;
 }
 
 /**
@@ -256,25 +297,15 @@ void MainView::resizeGL(int newWidth, int newHeight) {
 
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ) {
     qDebug() << "Rotation changed to (" << rotateX << "," << rotateY << "," << rotateZ << ")";
-    if (rotX != rotateX) {
-        angle = rotateX;
-    }
-    else if (rotY != rotateY) {
-        angle = rotateY;
-    }
-    else {
-        angle = rotateZ;
-    }
     rotX = rotateX;
     rotY = rotateY;
     rotZ = rotateZ;
     update();
-//    Q_UNIMPLEMENTED();
 }
 
 void MainView::setScale(int scale) {
-    // Ensures that the scaleFactor is between 0.5 and 1.5
-    scaleFactor = 1 + (scale - 100.0) * 5 / 1000.0;
+    // Ensures that the scaleFactor is between 0.8 and 1.2
+    scaleFactor = 1 + (scale - 100.0) * 2 / 1000.0;
 
     update();
 }

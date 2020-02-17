@@ -56,11 +56,20 @@ private:
     GLuint VBOcube, VBOpyr, VBOsphere, VAOcube, VAOpyr, VAOsphere;
     GLfloat scaleFactor, rotX, rotY, rotZ, angle;
     GLint modelTransform, projectTransform;
-    QMatrix4x4 cubeTranslate, pyrTranslate;
+    QMatrix4x4 cubeTranslate, pyrTranslate, sphereTranslate;
     QMatrix4x4 projection;
 
-    void setupVBOVAO(GLuint& VBO, GLuint& VAO, Vertex shape[], int triangles);
+    void deleteVAOs();
+    void deleteVBOs();
 
+    void setupCube();
+    void setupPyr();
+    void setupSphere();
+    void translateObjects();
+
+    void setupVBOVAO(GLuint& VBO, GLuint& VAO, Vertex shape[], int triangles);
+    QMatrix4x4 createTransformation(QMatrix4x4 translated, float scaleOffset);
+    void paintObject(QMatrix4x4 transformation, GLuint VAO, int amountOfTriangles);
     void setProjection(float left, float right, float bottom, float top, float zNear, float zFar);
 
     QOpenGLShaderProgram shaderProgram;
