@@ -93,16 +93,22 @@ void MainView::initializeGL() {
     };
 
     Vertex triangulatedCube[] {
+        // right
         cube[0], cube[3], cube[1],
         cube[0], cube[2], cube[3],
+        // back
         cube[0], cube[6], cube[2],
         cube[0], cube[4], cube[6],
+        // left
         cube[4], cube[5], cube[6],
         cube[5], cube[7], cube[6],
+        // front
         cube[1], cube[3], cube[7],
         cube[1], cube[7], cube[5],
+        // top
         cube[0], cube[1], cube[5],
-        cube[1], cube[5], cube[4],
+        cube[0], cube[5], cube[4],
+        // bottom
         cube[2], cube[6], cube[3],
         cube[3], cube[6], cube[7],
     };
