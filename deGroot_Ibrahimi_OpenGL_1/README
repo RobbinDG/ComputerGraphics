@@ -1,3 +1,5 @@
+Assignment OpenGL 1 - de Groot, Robbin; Ibrahimi, Erblin.
+
 List of Modifications:
  - We defined the vertices and triangulations of both shapes (setupCube(), setupPyr())
  - We defined translation matrices for both shapes, and defined a projection matrix using the given values.
