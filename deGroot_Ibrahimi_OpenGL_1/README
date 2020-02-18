@@ -1,8 +1,19 @@
-This is a README file
+List of Modifications:
+ - We defined the vertices and triangulations of both shapes (setupCube(), setupPyr())
+ - We defined translation matrices for both shapes, and defined a projection matrix using the given values.
+ - We defined a function to setup the VAO and VBO for an arbitrary set of triangles.
+ - We defined openGL uniforms for the transformation and projection matrices, and use them in the shader to transform and project all the vertices.
+ - We defined how rotation and scaling should work according to the specification.
+ - We linked the Qt UI elements to their respective functions
+ - We loaded and rendered a sphere object from file.
 
-When submitting your assignment, describe (briefly) the changes you made and what difficulties you encountered in this file.
+User instructions
+ - The rotating buttons at the top rotate all elements around their axes in the x, y and z direction. You can reset the rotation with the "reset rotation" button.
+ - Similarly, one may scale all objects by using the scale slider. This also can be reset with the appropriate button.
 
-Also describe what controls (key short-cuts, mouse clicks, mouse movement etc) and possible bonus assignments you implemented, so we can check them more easily.
+Difficulties
+ - Faces were rendered inside-out first off, which created incomprehensible shapes.
+ - Some triangles were implemented incorrectly, creating open shapes. Finding which is which was harder than we expected.
+ - Using a static array for the sphere led to a multitude of issues that were all fixed after switching to std::vector<Vertex>.
 
-If you have any suggestions/feedback for improving the practical assignments or support from teaching assistants, you may include it here OR post in anonymously on Nestor under Feedback.
-
+No bonus assignments were implemented.
