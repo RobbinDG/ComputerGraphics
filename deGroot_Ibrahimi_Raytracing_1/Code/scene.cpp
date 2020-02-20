@@ -52,9 +52,11 @@ Color Scene::trace(Ray const &ray)
     *        pow(a,b)           a to the power of b
     ****************************************************/
 
-    Color color = material.color;               // placeholder
+    Color Ia, Id, Is;
+    double ka = 1.0, kd = 1.0, ks = 1.0;
+    Ia = material.color * ka;
 
-    return color;
+    return Ia;
 }
 
 void Scene::render(Image &img)
