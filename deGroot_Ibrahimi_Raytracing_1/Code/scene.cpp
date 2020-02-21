@@ -10,16 +10,13 @@
 
 using namespace std;
 
-Color Scene::trace(Ray const &ray)
-{
+Color Scene::trace(Ray const& ray) {
     // Find hit object and distance
     Hit min_hit(numeric_limits<double>::infinity(), Vector());
     ObjectPtr obj = nullptr;
-    for (unsigned idx = 0; idx != objects.size(); ++idx)
-    {
+    for (unsigned idx = 0; idx != objects.size(); ++idx) {
         Hit hit(objects[idx]->intersect(ray));
-        if (hit.t < min_hit.t)
-        {
+        if (hit.t < min_hit.t) {
             min_hit = hit;
             obj = objects[idx];
         }
@@ -52,25 +49,28 @@ Color Scene::trace(Ray const &ray)
     *        pow(a,b)           a to the power of b
     ****************************************************/
 
-    Color Ia, Id, Is;
-    auto L = (lights[0]->position - hit).normalized();
+    Color Ia, Id = Color(0.0, 0.0, 0.0), Is = Color(0.0, 0.0, 0.0);
+
 
     if (N.dot(V) < 0) N *= -1;
 
     Ia = material.color * material.ka;
-    Id = max(N.dot(L), 0.0) * material.color * lights[0]->color * material.kd;
+    for (auto& l : lights) {
+        auto L = (l->position - hit).normalized();
+        auto R = 2 * (N.dot(L)) * N - L;
+        
+        Id += max(N.dot(L), 0.0) * material.color * l->color * material.kd;
+        Is += pow(max(R.dot(V), 0.0), material.n) * l->color * material.ks;
+    }
 
-    return Ia + Id;
+    return Ia + Id + Is;
 }
 
-void Scene::render(Image &img)
-{
+void Scene::render(Image& img) {
     unsigned w = img.width();
     unsigned h = img.height();
-    for (unsigned y = 0; y < h; ++y)
-    {
-        for (unsigned x = 0; x < w; ++x)
-        {
+    for (unsigned y = 0; y < h; ++y) {
+        for (unsigned x = 0; x < w; ++x) {
             Point pixel(x + 0.5, h - 1 - y + 0.5, 0);
             Ray ray(eye, (pixel - eye).normalized());
             Color col = trace(ray);
@@ -82,27 +82,22 @@ void Scene::render(Image &img)
 
 // --- Misc functions ----------------------------------------------------------
 
-void Scene::addObject(ObjectPtr obj)
-{
+void Scene::addObject(ObjectPtr obj) {
     objects.push_back(obj);
 }
 
-void Scene::addLight(Light const &light)
-{
+void Scene::addLight(Light const& light) {
     lights.push_back(LightPtr(new Light(light)));
 }
 
-void Scene::setEye(Triple const &position)
-{
+void Scene::setEye(Triple const& position) {
     eye = position;
 }
 
-unsigned Scene::getNumObject()
-{
+unsigned Scene::getNumObject() {
     return objects.size();
 }
 
-unsigned Scene::getNumLights()
-{
+unsigned Scene::getNumLights() {
     return lights.size();
 }
