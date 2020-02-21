@@ -22,12 +22,6 @@ Hit Sphere::intersect(Ray const& ray) {
     * intersection point from the ray origin in *t (see example).
     ****************************************************/
 
-    // Placeholder for actual intersection calculation.
-    /*
-    Vector originToPosition = (position - ray.O).normalized();
-    if (originToPosition.dot(ray.D) < 0.999)
-        return Hit::NO_HIT();
-*/
     double a, b, c, disc, t;
     a = ray.D.dot(ray.D);
     b = 2 * (ray.O - position).dot(ray.D);
@@ -55,7 +49,7 @@ Hit Sphere::intersect(Ray const& ray) {
     *
     * Insert calculation of the sphere's normal at the intersection point.
     ****************************************************/
-    Vector N /* = ... */;
+    Vector N = ((ray.O + t * ray.D) - position).normalized();
 
     return t < 0.0 ? Hit::NO_HIT() : Hit(t, N);
 }

@@ -53,10 +53,14 @@ Color Scene::trace(Ray const &ray)
     ****************************************************/
 
     Color Ia, Id, Is;
-    double ka = 1.0, kd = 1.0, ks = 1.0;
-    Ia = material.color * ka;
+    auto L = (lights[0]->position - hit).normalized();
 
-    return Ia;
+    if (N.dot(V) < 0) N *= -1;
+
+    Ia = material.color * material.ka;
+    Id = max(N.dot(L), 0.0) * material.color * lights[0]->color * material.kd;
+
+    return Ia + Id;
 }
 
 void Scene::render(Image &img)
