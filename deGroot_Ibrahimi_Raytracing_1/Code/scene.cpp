@@ -51,14 +51,13 @@ Color Scene::trace(Ray const& ray) {
 
     Color Ia, Id = Color(0.0, 0.0, 0.0), Is = Color(0.0, 0.0, 0.0);
 
-
-    if (N.dot(V) < 0) N *= -1;
+    if (N.dot(V) < 0.0) N *= -1;
 
     Ia = material.color * material.ka;
     for (auto& l : lights) {
         auto L = (l->position - hit).normalized();
         auto R = 2 * (N.dot(L)) * N - L;
-        
+
         Id += max(N.dot(L), 0.0) * material.color * l->color * material.kd;
         Is += pow(max(R.dot(V), 0.0), material.n) * l->color * material.ks;
     }
