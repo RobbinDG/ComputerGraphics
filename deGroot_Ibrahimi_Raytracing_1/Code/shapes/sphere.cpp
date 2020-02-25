@@ -32,8 +32,8 @@ Hit Sphere::intersect(Ray const& ray) {
         double p,q;
         p = (-b + sqrt(disc)) / (2 * a); q = (-b - sqrt(disc)) / (2 * a);
         if (p < 0 && q < 0) return Hit::NO_HIT();
-        if (p < 0) t = q;
-        else if (q < 0) t = p;
+        if (p < 0) t = q; // q >= 0
+        else if (q < 0) t = p; // p >= 0
         else t = min(p, q);
     } else if (disc == 0.0) { // 1 solution, calculate either
         t = (-b - sqrt(disc)) / (2 * a);
