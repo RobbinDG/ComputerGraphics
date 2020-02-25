@@ -36,6 +36,7 @@
 CMakeLists.txt.user
 __MACOSX
 *.DS_Store
+*.zip
 
 # C++ objects and libs
 *.slo
