@@ -16,7 +16,7 @@ class Triple
     public:
 // --- data members ------------------------------------------------------------
 
-        // union to acces the same elements by
+        // union to access the same elements by
         // x, y, z, or r, g, b or data[index]
         union {
             double data[3];
