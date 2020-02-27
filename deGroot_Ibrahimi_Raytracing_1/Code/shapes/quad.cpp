@@ -7,14 +7,16 @@
 using namespace std;
 
 Hit Quad::intersect(Ray const& ray) {
-    Triangle t0(vv0, vv1, vv2);
+    Triangle t0(vv0, vv2, vv1);
     Triangle t1(vv0, vv2, vv3);
 
 //    Hit min_hit(numeric_limits<double>::infinity(), Vector());
     Hit t0_hit = t0.intersect(ray);
     Hit t1_hit = t1.intersect(ray);
 
-    if (t0_hit.t && !t1_hit.t) {
+    if (isnan(t0_hit.t)) return t1_hit;
+    return t0_hit;
+    if (t0_hit.t && isnan(t1_hit.t)) {
         return t0_hit;
     }
     if (!t0_hit.t && t1_hit.t) {

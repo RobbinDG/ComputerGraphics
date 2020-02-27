@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <limits>
+#include <iostream>
 
 using namespace std;
 
@@ -52,6 +53,8 @@ Color Scene::trace(Ray const& ray) {
     Color Ia, Id = Color(0.0, 0.0, 0.0), Is = Color(0.0, 0.0, 0.0);
 
     if (N.dot(V) < 0.0) N *= -1;
+
+    std::cout << N  << std::endl;
 
     Ia = material.color * material.ka;
     for (auto& l : lights) {
