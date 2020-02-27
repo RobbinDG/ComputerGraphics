@@ -80,33 +80,50 @@ void MainView::initializeGL() {
 
 void MainView::createShaderProgram() {
     // Create shader program
-    shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex,
-                                           ":/shaders/vertshader.glsl");
-    shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment,
-                                           ":/shaders/fragshader.glsl");
-    shaderProgram.link();
+    shaderProgram_normal.addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                           ":/shaders/vertshader_normal.glsl");
+    shaderProgram_normal.addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                           ":/shaders/fragshader_normal.glsl");
+    shaderProgram_gouraud.addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                           ":/shaders/vertshader_gouraud.glsl");
+    shaderProgram_gouraud.addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                           ":/shaders/fragshader_gouraud.glsl");
+    shaderProgram_phong.addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                           ":/shaders/vertshader_phong.glsl");
+    shaderProgram_phong.addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                           ":/shaders/fragshader_phong.glsl");
+    shaderProgram_normal.link();
 
     // Get the uniforms
-    uniformModelViewTransform = shaderProgram.uniformLocation("modelViewTransform");
-    uniformProjectionTransform = shaderProgram.uniformLocation("projectionTransform");
+    uniformModelViewTransform = shaderProgram_normal.uniformLocation("modelViewTransform");
+    uniformProjectionTransform = shaderProgram_normal.uniformLocation("projectionTransform");
+    uniformNormalTransform = shaderProgram_normal.uniformLocation("transNorms");
 }
 
 void MainView::loadMesh() {
     Model model(":/models/cube.obj");
+//    model.unitize();
+
+    QVector<QVector3D> normals = model.getNormals();
     QVector<QVector3D> vertexCoords = model.getVertices();
 
     QVector<float> meshData;
     meshData.reserve(2 * 3 * vertexCoords.size());
 
-    for (auto coord : vertexCoords)
-    {
+    for (int i = 0; i < vertexCoords.size(); i++) {
+        auto coord = vertexCoords[i];
+        auto normal = normals[i];
+
         meshData.append(coord.x());
         meshData.append(coord.y());
         meshData.append(coord.z());
-        meshData.append(static_cast<float>(rand()) / RAND_MAX);
-        meshData.append(static_cast<float>(rand()) / RAND_MAX);
-        meshData.append(static_cast<float>(rand()) / RAND_MAX);
+
+        meshData.append(normal.x());
+        meshData.append(normal.y());
+        meshData.append(normal.z());
     }
+
+//        meshData.append(static_cast<float>(rand()) / RAND_MAX);
 
     meshSize = vertexCoords.size();
 
@@ -143,6 +160,8 @@ void MainView::loadMesh() {
  *
  */
 void MainView::paintGL() {
+    QMatrix3x3 transNorms = meshTransform.normalMatrix();
+
     // Clear the screen before rendering
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -151,6 +170,7 @@ void MainView::paintGL() {
     // Set the projection matrix
     glUniformMatrix4fv(uniformProjectionTransform, 1, GL_FALSE, projectionTransform.data());
     glUniformMatrix4fv(uniformModelViewTransform, 1, GL_FALSE, meshTransform.data());
+    glUniformMatrix3fv(uniformNormalTransform, 1, GL_FALSE, transNorms.data());
 
     glBindVertexArray(meshVAO);
     glDrawArrays(GL_TRIANGLES, 0, meshSize);

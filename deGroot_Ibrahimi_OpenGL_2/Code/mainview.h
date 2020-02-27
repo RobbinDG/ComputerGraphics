@@ -54,9 +54,13 @@ private:
     QOpenGLDebugLogger debugLogger;
     QTimer timer; // timer used for animation
 
-    QOpenGLShaderProgram shaderProgram;
+    QOpenGLShaderProgram shaderProgram_normal;
+    QOpenGLShaderProgram shaderProgram_gouraud;
+    QOpenGLShaderProgram shaderProgram_phong;
+
     GLint uniformModelViewTransform;
     GLint uniformProjectionTransform;
+    GLint uniformNormalTransform;
 
     // Mesh values
     GLuint meshVAO;

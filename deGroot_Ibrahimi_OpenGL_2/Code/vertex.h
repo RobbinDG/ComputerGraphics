@@ -7,11 +7,13 @@ struct Vertex
 {
     QVector3D coords;
     QVector3D color;
+    QVector3D normal;
 
-    Vertex(QVector3D coords, QVector3D color)
+    Vertex(QVector3D coords, QVector3D color, QVector3D normal)
         :
           coords(coords),
-          color(color)
+          color(color),
+          normal(normal)
     {}
 };
 
