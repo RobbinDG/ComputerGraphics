@@ -6,3 +6,6 @@ Also describe what controls (key short-cuts, mouse clicks, mouse movement etc) a
 
 If you have any suggestions/feedback for improving the practical assignments or support from teaching assistants, you may include it here OR post in anonymously on Nestor under Feedback.
 
+
+When rendering the mesh without the normal matrix applied shows uniform colours independent of transformations. When applying the normal matrix, the normals are relative to the transformations.
+
