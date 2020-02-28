@@ -6,7 +6,7 @@
 using namespace std;
 
 Hit Quad::intersect(Ray const& ray) {
-    Triangle t0(vv0, vv2, vv1);
+    Triangle t0(vv0, vv1, vv2);
     Triangle t1(vv0, vv2, vv3);
 
     Hit t0_hit = t0.intersect(ray);

@@ -27,6 +27,7 @@ Color Scene::trace(Ray const& ray) {
     if (!obj)
         return Color(0.0, 0.0, 0.0);
 
+
     Material material = obj->material;          // the hit objects material
     Point hit = ray.at(min_hit.t);              // the hit point
     Vector N = min_hit.N;                       // the normal at hit point
@@ -53,8 +54,6 @@ Color Scene::trace(Ray const& ray) {
     Color Ia, Id = Color(0.0, 0.0, 0.0), Is = Color(0.0, 0.0, 0.0);
 
     if (N.dot(V) < 0.0) N *= -1;
-
-    std::cout << N  << std::endl;
 
     Ia = material.color * material.ka;
     for (auto& l : lights) {

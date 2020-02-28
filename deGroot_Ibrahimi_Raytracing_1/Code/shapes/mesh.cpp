@@ -58,8 +58,6 @@ Mesh::Mesh(string const& filename, Point const& position, Vector const& rotation
         v1 += position;
         v2 += position;
 
-        std::cout << v0 << " " << v1 << " " << v2 << std::endl;
-
         d_tris.push_back(ObjectPtr(new Triangle(v0, v1, v2)));
     }
 
