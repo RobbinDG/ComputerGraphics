@@ -9,7 +9,7 @@
     "Objects": [
         {
             "type": "cylinder",
-            "position": [200, 25, 0],
+            "position": [200, 150, 1200],
             "direction": [0.0, 100.0, 0.0],
             "radius": 80,
             "material":
