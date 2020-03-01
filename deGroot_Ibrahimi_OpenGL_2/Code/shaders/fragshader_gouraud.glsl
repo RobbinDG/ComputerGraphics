@@ -3,9 +3,12 @@
 // Define constants
 #define M_PI 3.141593
 
+uniform sampler2D samplerUniform;
+
 // Specify the inputs to the fragment shader
 // These must have the same type and name!
 in vec3 color;
+in vec2 textureCoords;
 
 // Specify the Uniforms of the fragment shaders
 // uniform vec3 lightPosition; // for example
@@ -16,5 +19,6 @@ out vec4 fColor;
 
 void main()
 {
+    vec4 textureColor = texture(samplerUniform, textureCoords);
     fColor = vec4(color, 1);
 }

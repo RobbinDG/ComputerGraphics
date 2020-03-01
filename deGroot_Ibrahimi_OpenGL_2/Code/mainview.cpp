@@ -74,6 +74,7 @@ void MainView::initializeGL() {
 
     createShaderProgram();
     loadMesh();
+    loadTexture(":/textures/cat_diff.png", texturePtr);
 
     // Initialize transformations
     updateProjectionTransform();
@@ -101,14 +102,16 @@ void MainView::createShaderProgram() {
     uniformModelViewTransform = shaderPrograms[1].uniformLocation("modelViewTransform");
     uniformProjectionTransform = shaderPrograms[1].uniformLocation("projectionTransform");
     uniformNormalTransform = shaderPrograms[1].uniformLocation("transNorms");
+    uniformSampler = shaderPrograms[0].uniformLocation("samplerUniform");
 }
 
 void MainView::loadMesh() {
     Model model(":/models/cat.obj");
-//    model.unitize();
+    model.unitize();
 
     QVector<QVector3D> normals = model.getNormals();
     QVector<QVector3D> vertexCoords = model.getVertices();
+    QVector<QVector2D> textureCoords = model.getTextureCoords();
 
     QVector<float> meshData;
     meshData.reserve(2 * 3 * vertexCoords.size());
@@ -116,6 +119,7 @@ void MainView::loadMesh() {
     for (int i = 0; i < vertexCoords.size(); i++) {
         auto coord = vertexCoords[i];
         auto normal = normals[i];
+        auto texCoord = textureCoords[i];
 
         meshData.append(coord.x());
         meshData.append(coord.y());
@@ -125,8 +129,6 @@ void MainView::loadMesh() {
         meshData.append(normal.y());
         meshData.append(normal.z());
     }
-
-//        meshData.append(static_cast<float>(rand()) / RAND_MAX);
 
     meshSize = vertexCoords.size();
 
@@ -149,10 +151,29 @@ void MainView::loadMesh() {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void*>(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
+    // Set texture coordinates to location 2
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void*>(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
 
+void MainView::loadTexture(QString file, GLuint texturePtr) {
+    glBindTexture(GL_TEXTURE_2D, texturePtr);
+
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, );
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    QImage image = QImage(file);
+    QVector<quint8> imageBytes = imageToBytes(image);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageBytes.data());
+    glGenerateMipmap(GL_TEXTURE_2D);
+}
 
 // --- OpenGL drawing
 
@@ -174,6 +195,10 @@ void MainView::paintGL() {
     glUniformMatrix4fv(uniformProjectionTransform, 1, GL_FALSE, projectionTransform.data());
     glUniformMatrix4fv(uniformModelViewTransform, 1, GL_FALSE, meshTransform.data());
     glUniformMatrix3fv(uniformNormalTransform, 1, GL_FALSE, transNorms.data());
+    glUniform1i(uniformSampler, 0);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texturePtr);
 
     glBindVertexArray(meshVAO);
     glDrawArrays(GL_TRIANGLES, 0, meshSize);

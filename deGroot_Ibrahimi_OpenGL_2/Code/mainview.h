@@ -30,7 +30,7 @@ public:
     void setRotation(int rotateX, int rotateY, int rotateZ);
     void setScale(int scale);
     void setShadingMode(ShadingMode shading);
-    QVector<quint8> imageToBytes(QImage image)
+    QVector<quint8> imageToBytes(QImage image);
 
 protected:
     void initializeGL();
@@ -57,19 +57,20 @@ private:
 
     GLint currentShader;
     QOpenGLShaderProgram shaderPrograms[3];
-//    QOpenGLShaderProgram shaderProgram_normal;
-//    QOpenGLShaderProgram shaderProgram_gouraud;
-//    QOpenGLShaderProgram shaderProgram_phong;
 
     GLint uniformModelViewTransform;
     GLint uniformProjectionTransform;
     GLint uniformNormalTransform;
+    GLint uniformSampler;
 
     // Mesh values
     GLuint meshVAO;
     GLuint meshVBO;
     GLuint meshSize;
     QMatrix4x4 meshTransform;
+
+    // Texture values
+    GLuint texturePtr;
 
     // Transforms
     float scale = 1.f;
@@ -78,6 +79,7 @@ private:
 
     void createShaderProgram();
     void loadMesh();
+    void loadTexture(QString file, GLuint texturePtr);
 
     void destroyModelBuffers();
 
