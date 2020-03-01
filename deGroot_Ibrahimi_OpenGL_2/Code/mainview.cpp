@@ -70,6 +70,8 @@ void MainView::initializeGL() {
     // Set the color to be used by glClear. This is, effectively, the background color.
     glClearColor(0.2f, 0.5f, 0.7f, 0.0f);
 
+    currentShader = 0;
+
     createShaderProgram();
     loadMesh();
 
@@ -80,28 +82,29 @@ void MainView::initializeGL() {
 
 void MainView::createShaderProgram() {
     // Create shader program
-    shaderProgram_normal.addShaderFromSourceFile(QOpenGLShader::Vertex,
-                                           ":/shaders/vertshader_normal.glsl");
-    shaderProgram_normal.addShaderFromSourceFile(QOpenGLShader::Fragment,
-                                           ":/shaders/fragshader_normal.glsl");
-    shaderProgram_gouraud.addShaderFromSourceFile(QOpenGLShader::Vertex,
-                                           ":/shaders/vertshader_gouraud.glsl");
-    shaderProgram_gouraud.addShaderFromSourceFile(QOpenGLShader::Fragment,
-                                           ":/shaders/fragshader_gouraud.glsl");
-    shaderProgram_phong.addShaderFromSourceFile(QOpenGLShader::Vertex,
+    shaderPrograms[0].addShaderFromSourceFile(QOpenGLShader::Vertex,
                                            ":/shaders/vertshader_phong.glsl");
-    shaderProgram_phong.addShaderFromSourceFile(QOpenGLShader::Fragment,
+    shaderPrograms[0].addShaderFromSourceFile(QOpenGLShader::Fragment,
                                            ":/shaders/fragshader_phong.glsl");
-    shaderProgram_normal.link();
+    shaderPrograms[1].addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                           ":/shaders/vertshader_normal.glsl");
+    shaderPrograms[1].addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                           ":/shaders/fragshader_normal.glsl");
+    shaderPrograms[2].addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                           ":/shaders/vertshader_gouraud.glsl");
+    shaderPrograms[2].addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                           ":/shaders/fragshader_gouraud.glsl");
+
+    shaderPrograms[1].link();
 
     // Get the uniforms
-    uniformModelViewTransform = shaderProgram_normal.uniformLocation("modelViewTransform");
-    uniformProjectionTransform = shaderProgram_normal.uniformLocation("projectionTransform");
-    uniformNormalTransform = shaderProgram_normal.uniformLocation("transNorms");
+    uniformModelViewTransform = shaderPrograms[1].uniformLocation("modelViewTransform");
+    uniformProjectionTransform = shaderPrograms[1].uniformLocation("projectionTransform");
+    uniformNormalTransform = shaderPrograms[1].uniformLocation("transNorms");
 }
 
 void MainView::loadMesh() {
-    Model model(":/models/cube.obj");
+    Model model(":/models/cat.obj");
 //    model.unitize();
 
     QVector<QVector3D> normals = model.getNormals();
@@ -165,7 +168,7 @@ void MainView::paintGL() {
     // Clear the screen before rendering
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shaderProgram.bind();
+    shaderPrograms[currentShader].bind();
 
     // Set the projection matrix
     glUniformMatrix4fv(uniformProjectionTransform, 1, GL_FALSE, projectionTransform.data());
@@ -175,7 +178,7 @@ void MainView::paintGL() {
     glBindVertexArray(meshVAO);
     glDrawArrays(GL_TRIANGLES, 0, meshSize);
 
-    shaderProgram.release();
+    shaderPrograms[currentShader].release();
 }
 
 /**
@@ -228,7 +231,7 @@ void MainView::setScale(int newScale) {
 
 void MainView::setShadingMode(ShadingMode shading) {
     qDebug() << "Changed shading to" << shading;
-    Q_UNIMPLEMENTED();
+    currentShader = shading;
 }
 
 // --- Private helpers

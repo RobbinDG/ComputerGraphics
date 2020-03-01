@@ -30,6 +30,7 @@ public:
     void setRotation(int rotateX, int rotateY, int rotateZ);
     void setScale(int scale);
     void setShadingMode(ShadingMode shading);
+    QVector<quint8> imageToBytes(QImage image)
 
 protected:
     void initializeGL();
@@ -54,9 +55,11 @@ private:
     QOpenGLDebugLogger debugLogger;
     QTimer timer; // timer used for animation
 
-    QOpenGLShaderProgram shaderProgram_normal;
-    QOpenGLShaderProgram shaderProgram_gouraud;
-    QOpenGLShaderProgram shaderProgram_phong;
+    GLint currentShader;
+    QOpenGLShaderProgram shaderPrograms[3];
+//    QOpenGLShaderProgram shaderProgram_normal;
+//    QOpenGLShaderProgram shaderProgram_gouraud;
+//    QOpenGLShaderProgram shaderProgram_phong;
 
     GLint uniformModelViewTransform;
     GLint uniformProjectionTransform;

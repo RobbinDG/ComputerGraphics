@@ -48,7 +48,7 @@ void MainWindow::on_ResetScaleButton_clicked(bool checked) {
 }
 
 void MainWindow::on_ScaleSlider_valueChanged(int value) {
-    ui->mainView->setScale(value);
+    ui->mainView->setScale(value * 10);
 }
 
 void MainWindow::on_PhongButton_toggled(bool checked) {

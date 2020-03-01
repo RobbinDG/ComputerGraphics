@@ -13,11 +13,15 @@ uniform mat4 projectionTransform;
 uniform mat3 transNorms;
 
 // Specify the output of the vertex stage
+out vec3 lightPos;
 out vec3 vertNormal;
+out vec3 vertCoordinates;
 
 void main()
 {
     // gl_Position is the output (a vec4) of the vertex shader
     gl_Position = projectionTransform * modelViewTransform * vec4(vertCoordinates_in, 1.0);
-    vertNormal = transNorms * vertNormal_in;
+    lightPos = vec3(modelViewTransform * vec4(100.0, 100.0, 150.0, 1.0));
+    vertNormal = vertNormal_in;
+    vertCoordinates = vertCoordinates_in;
 }
