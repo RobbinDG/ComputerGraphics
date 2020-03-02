@@ -56,7 +56,22 @@ Model::Model(QString filename) {
  *
  */
 void Model::unitize() {
-    qDebug() << "TODO: implement this yourself";
+    float minCoord = std::numeric_limits<float>::max();
+    float maxCoord = std::numeric_limits<float>::min();
+    for (auto& vertex : vertices) {
+        minCoord = std::min(minCoord, vertex.x());
+        minCoord = std::min(minCoord, vertex.y());
+        minCoord = std::min(minCoord, vertex.z());
+
+        maxCoord = std::max(maxCoord, vertex.x());
+        maxCoord = std::max(maxCoord, vertex.y());
+        maxCoord = std::max(maxCoord, vertex.z());
+    }
+    for (auto& vertex : vertices) {
+        vertex.setX(vertex.x() / (maxCoord - minCoord) - minCoord - 0.5);
+        vertex.setY(vertex.y() / (maxCoord - minCoord) - minCoord - 0.5);
+        vertex.setZ(vertex.z() / (maxCoord - minCoord) - minCoord - 0.5);
+    }
 }
 
 QVector<QVector3D> Model::getVertices() {
