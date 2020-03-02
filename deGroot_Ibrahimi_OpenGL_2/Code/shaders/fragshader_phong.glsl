@@ -29,15 +29,15 @@ void main()
     vec3 N = normalize(transNorms * vertexNormal);
     vec3 L = normalize(lightPos - vertexCoords);
     vec3 R = normalize(2 * dot(N, L) * N - L);
-    vec3 V = 0 - vertexCoords;
+    vec3 V = normalize(0 - vertexCoords);
 
     int p = 1; // TODO
 
     vec4 textureColor = texture(samplerUniform, textureCoords);
 
-    vec3 Ia = vec3(0.5, 0.5, 0.5); // TODO
-    vec3 Id = max(0.0, dot(N, L)) * vec3(textureColor);
-    vec3 Is = pow(max(0.0, dot(R, V)), p) * vec3(1, 1, 1);
+    vec3 Ia = 0.3 * vec3(1, 1, 1) * textureColor.rgb; // TODO
+    vec3 Id = max(0.0, dot(N, L)) * textureColor.rgb;
+    vec3 Is = pow(max(0.0, dot(R, V)), p) * 0.2 * vec3(1, 1, 1);
 
     vec3 color = Ia + Id + Is;
 

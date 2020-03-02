@@ -114,12 +114,12 @@ void MainView::loadMesh() {
     QVector<QVector2D> textureCoords = model.getTextureCoords();
 
     QVector<float> meshData;
-    meshData.reserve(2 * 3 * vertexCoords.size());
+    meshData.reserve((3 + 3 + 2) * vertexCoords.size());
 
     for (int i = 0; i < vertexCoords.size(); i++) {
         auto coord = vertexCoords[i];
         auto normal = normals[i];
-        auto texCoord = textureCoords[i];
+        auto texture = textureCoords[i];
 
         meshData.append(coord.x());
         meshData.append(coord.y());
@@ -128,6 +128,9 @@ void MainView::loadMesh() {
         meshData.append(normal.x());
         meshData.append(normal.y());
         meshData.append(normal.z());
+
+        meshData.append(texture.x());
+        meshData.append(texture.y());
     }
 
     meshSize = vertexCoords.size();
@@ -144,15 +147,15 @@ void MainView::loadMesh() {
     glBufferData(GL_ARRAY_BUFFER, meshData.size() * sizeof(float), meshData.data(), GL_STATIC_DRAW);
 
     // Set vertex coordinates to location 0
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
     glEnableVertexAttribArray(0);
 
     // Set colour coordinates to location 1
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void*>(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void*>(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     // Set texture coordinates to location 2
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), reinterpret_cast<void*>(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void*>(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -171,8 +174,8 @@ void MainView::loadTexture(QString file, GLuint texturePtr) {
     QImage image = QImage(file);
     QVector<quint8> imageBytes = imageToBytes(image);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageBytes.data());
-    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, imageBytes.data());
+//    glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 // --- OpenGL drawing

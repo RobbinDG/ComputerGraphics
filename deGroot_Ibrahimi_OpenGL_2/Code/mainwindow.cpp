@@ -44,7 +44,7 @@ void MainWindow::on_RotationDialZ_valueChanged(int value) {
 void MainWindow::on_ResetScaleButton_clicked(bool checked) {
     Q_UNUSED(checked);
     ui->ScaleSlider->setValue(100);
-    ui->mainView->setScale(100);
+    ui->mainView->setScale(1000);
 }
 
 void MainWindow::on_ScaleSlider_valueChanged(int value) {

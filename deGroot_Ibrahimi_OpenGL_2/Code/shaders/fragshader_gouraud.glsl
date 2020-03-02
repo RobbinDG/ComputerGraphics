@@ -19,6 +19,5 @@ out vec4 fColor;
 
 void main()
 {
-    vec4 textureColor = texture(samplerUniform, textureCoords);
-    fColor = vec4(color, 1);
+    fColor = texture(samplerUniform, textureCoords);
 }
