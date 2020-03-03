@@ -85,7 +85,9 @@ Color Scene::trace(Ray const& ray, unsigned depth) {
         // Use Schlick's approximation to determine the ratio between the two.
     } else if (depth > 0 and material.ks > 0.0) {
         // The object is not transparent, but opaque.
-
+        Vector R = (2 * shadingN.dot(-ray.D) * shadingN - (-ray.D));
+        Color specReflection = trace({hit + epsilon * shadingN, R}, depth - 1);
+        color += specReflection * material.ks;
     }
 
     return color;
