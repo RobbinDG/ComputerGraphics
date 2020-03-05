@@ -57,37 +57,64 @@ Color Scene::trace(Ray const& ray, unsigned depth) {
     Color color = material.ka * matColor;
 
     // Add diffuse and specular components.
-    for (auto const& light : lights) {
-        Vector L = (light->position - hit).normalized();
+    if (N.dot(V) >= 0.0) {
+        for (auto const& light : lights) {
+            Vector L = (light->position - hit).normalized();
 
-        // Calculate illumination multiplier. For now, 0 when light source is blocked
-        double illumination = 1.0;
-        if (renderShadows) {
-            auto lightIntersect = Scene::castRay({hit + epsilon * shadingN, L});
-            if (lightIntersect.first && lightIntersect.second.t < (light->position - hit).length())
-                illumination = 0.0;
+            // Calculate illumination multiplier. For now, 0 when light source is blocked
+            double illumination = 1.0;
+            if (renderShadows) {
+                auto lightIntersect = Scene::castRay({hit + epsilon * shadingN, L});
+                if (lightIntersect.first &&
+                    lightIntersect.second.t < (light->position - hit).length())
+                    illumination = 0.0;
+            }
+
+            // Add diffuse.
+            double diffuse = std::max(shadingN.dot(L), 0.0);
+            color += illumination * diffuse * material.kd * light->color * matColor;
+
+            // Add specular.
+            Vector reflectDir = reflect(-L, shadingN);
+            double specAngle = std::max(reflectDir.dot(V), 0.0);
+            double specular = std::pow(specAngle, material.n);
+
+            color += illumination * specular * material.ks * light->color;
         }
-
-        // Add diffuse.
-        double diffuse = std::max(shadingN.dot(L), 0.0);
-        color += illumination * diffuse * material.kd * light->color * matColor;
-
-        // Add specular.
-        Vector reflectDir = reflect(-L, shadingN);
-        double specAngle = std::max(reflectDir.dot(V), 0.0);
-        double specular = std::pow(specAngle, material.n);
-
-        color += illumination * specular * material.ks * light->color;
     }
 
     if (depth > 0 and material.isTransparent) {
         // The object is transparent, and thus refracts and reflects light.
         // Use Schlick's approximation to determine the ratio between the two.
+        double ni, nt;
+        if (N.dot(V) >= 0.0) { // ray from outside to inside
+            ni = 1.0;
+            nt = material.nt;
+        } else { // ray from inside to outside
+            ni = material.nt;
+            nt = 1.0;
+        }
+
+        double kr0 = pow((ni - nt) / (ni + nt), 2);
+        double kr = kr0 + (1 - kr0) * pow((1 - shadingN.dot(V)), 5);
+        double kt = 1 - kr;
+
+        Vector R = 2 * shadingN.dot(V) * shadingN - V;
+        Color transRefl = trace({hit + epsilon * shadingN, R}, depth - 1);
+        if (kr > 0.0) color += kr * transRefl;
+
+        Vector D = ray.D;
+        double t = 1 - (ni * ni * (1 - pow(D.dot(shadingN), 2))) / (nt * nt);
+        Vector T = (ni * (D - D.dot(shadingN) * shadingN)) / nt - shadingN * sqrt(t);
+        Color transmitted = trace({hit - epsilon * shadingN, T}, depth - 1);
+
+        if (kt > 0.0) color += kt * transmitted;
+
     } else if (depth > 0 and material.ks > 0.0) {
         // The object is not transparent, but opaque.
-        Vector R = (2 * shadingN.dot(-ray.D) * shadingN - (-ray.D));
-        Color specReflection = trace({hit + epsilon * shadingN, R}, depth - 1);
-        color += specReflection * material.ks;
+        Vector R = (2 * shadingN.dot(V) * shadingN - V);
+        Color opaqRefl = trace({hit + epsilon * shadingN, R}, depth - 1);
+        color += opaqRefl * material.ks;
     }
 
     return color;
