@@ -92,6 +92,7 @@ compile_commands.json
 *creator.user*
 
 build/
+!build/zip.sh
 
 # CLion
 cmake-build-debug/
