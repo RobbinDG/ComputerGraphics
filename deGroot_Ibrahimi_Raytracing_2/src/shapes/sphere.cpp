@@ -1,5 +1,6 @@
 #include "sphere.h"
 #include "solvers.h"
+#include "../quaternion.h"
 
 #include <cmath>
 
@@ -41,6 +42,9 @@ Hit Sphere::intersect(Ray const &ray)
 Vector Sphere::toUV(Point const &hit)
 {
 	Point p = hit - position;
+	Quaternion rot(0.0, p);
+	rot.rotate(-angle, axis.normalized());
+	p = rot.v;
     // placeholders
     double u = 0.5 + atan2(p.y, p.x) / (2 * M_PI);
     double v = 1.0 - acos(p.z / r) / M_PI;
