@@ -43,6 +43,21 @@ Color Scene::trace(Ray const& ray, unsigned depth) {
     // Pre-condition: For closed objects, N points outwards.
     Vector N = min_hit.N;
 
+    Color matColor;
+    if (material.hasTexture) {
+        Vector UV = obj->toUV(hit);
+        matColor = material.texture.colorAt(UV.x, 1.0 - UV.y);
+        if (material.hasNormalMap) {
+            Vector normalMap = material.normalMap.colorAt(UV.x, 1.0 - UV.y);
+            normalMap.x = 2.0 * normalMap.x - 1.0;
+            normalMap.y = 2.0 * normalMap.y - 1.0;
+            normalMap.z = -(2.0 * normalMap.z - 1.0);
+            N = (N - normalMap).normalized();
+        }
+    } else {
+        matColor = material.color;
+    }
+
     // The shading normal always points in the direction of the view,
     // as required by the Phong illumination model.
     Vector shadingN;
@@ -50,14 +65,6 @@ Color Scene::trace(Ray const& ray, unsigned depth) {
         shadingN = N;
     } else {
         shadingN = -N;
-    }
-
-    Color matColor;
-    if (material.hasTexture) {
-        Vector UV = obj->toUV(hit);
-        matColor = material.texture.colorAt(UV.x, 1.0 - UV.y);
-    } else {
-        matColor = material.color;
     }
 
     // Add ambient once, regardless of the number of lights.
