@@ -1,5 +1,6 @@
 #include "mainview.h"
 #include "model.h"
+#include "scene.h"
 
 /**
  * @brief MainView::MainView
@@ -61,12 +62,21 @@ void MainView::initializeGL() {
     glClearColor(0.2F, 0.5F, 0.7F, 0.0F);
 
     createShaderProgram();
+    Scene scene;
+    Texture catTex(":/textures/cat_diff.png");
+    Mesh cat(":/models/cat.obj", catTex);
     loadMesh();
     loadTextures();
 
     // Initialize transformations.
     updateProjectionTransform();
     updateModelTransforms();
+    angle = 90.0 / 60.0; // degrees / frame
+    translation = {0.0f, 0.0f, 0.0f};
+    rotationAxis = {0.0, 1.0, 0.0};
+
+    // Start timer
+    timer.start(1000.0 / 60.0);
 }
 
 void MainView::createShaderProgram() {
@@ -167,6 +177,11 @@ void MainView::paintGL() {
         updatePhongUniforms();
         break;
     }
+
+    // Apply transformations
+    meshTransform.translate(translation);
+    meshTransform.rotate(angle, rotationAxis);
+
 
     // Set the texture and draw the mesh.
     glActiveTexture(GL_TEXTURE0);

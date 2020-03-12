@@ -46,7 +46,9 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
 
     // Transforms
     float scale = 1.0F;
+    QVector3D translation;
     QVector3D rotation;
+    QVector3D rotationAxis;
     QMatrix4x4 projectionTransform;
     QMatrix3x3 meshNormalTransform;
     QMatrix4x4 meshTransform;
@@ -55,6 +57,9 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QVector4D material = {0.5F, 0.5F, 0.5F, 5.0F};
     QVector3D lightPosition = {0.0F, 100.0F, 0.0F};
     QVector3D lightColor = {1.0F, 1.0F, 1.0F};
+
+    // Animation
+    float angle;
 
 public:
     enum ShadingMode : GLuint

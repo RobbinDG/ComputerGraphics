@@ -11,6 +11,9 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mainview.cpp \
+    mesh.cpp \
+    scene.cpp \
+    texture.cpp \
     user_input.cpp \
     model.cpp \
     utility.cpp
@@ -18,7 +21,10 @@ SOURCES += \
 HEADERS += \
     mainwindow.h \
     mainview.h \
-    model.h
+    mesh.h \
+    model.h \
+    scene.h \
+    texture.h
 
 FORMS += \
     mainwindow.ui
