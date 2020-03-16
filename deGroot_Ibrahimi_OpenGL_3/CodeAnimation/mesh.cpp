@@ -15,8 +15,7 @@ Mesh::Mesh(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef, const std::string& fi
     load();
     this->texture.load();
     createShaderProgram();
-    transformMat.setToIdentity();
-    transformNormalMat = transformMat.normalMatrix();
+    resetTransform();
 }
 
 Mesh::~Mesh() {
@@ -28,50 +27,37 @@ void Mesh::setTranslation(const QVector3D& t) {
     translation = t;
 }
 
-void Mesh::setTranslationGlobal(const QVector3D& t) {
-    globTranslation = t;
-}
-
 void Mesh::setRotation(const QVector3D& r) {
     rotation = r;
-}
-
-void Mesh::setRotationGlobal(const QVector3D& r) {
-    globRotation = r;
 }
 
 void Mesh::setScale(float s) {
     scale = s;
 }
 
-void Mesh::setScaleGlobal(float s) {
-    globScale = s;
-}
-
-void Mesh::transform(const QVector3D& t, const QVector3D& r, float s) {
+void Mesh::setTransform(const QVector3D& t, const QVector3D& r, float s) {
     setTranslation(t);
     setRotation(r);
     setScale(s);
 }
 
-void Mesh::updateTransform() {
+void Mesh::resetTransform() {
     transformMat.setToIdentity();
+    transformNormalMat = transformMat.normalMatrix();
+}
 
-    transformMat.translate(globTranslation);
+void Mesh::transform(const QVector3D& t, const QVector3D& r, float s) {
+    transformMat.translate(t);
 
-    transformMat.rotate(globRotation.x(), {1.0F, 0.0F, 0.0F});
-    transformMat.rotate(globRotation.y(), {0.0F, 1.0F, 0.0F});
-    transformMat.rotate(globRotation.z(), {0.0F, 0.0F, 1.0F});
+    transformMat.rotate(r.x(), {1.0F, 0.0F, 0.0F});
+    transformMat.rotate(r.y(), {0.0F, 1.0F, 0.0F});
+    transformMat.rotate(r.z(), {0.0F, 0.0F, 1.0F});
 
-    transformMat.scale(globScale);
+    transformMat.scale(s);
+}
 
-    transformMat.translate(translation);
-
-    transformMat.rotate(rotation.x(), {1.0F, 0.0F, 0.0F});
-    transformMat.rotate(rotation.y(), {0.0F, 1.0F, 0.0F});
-    transformMat.rotate(rotation.z(), {0.0F, 0.0F, 1.0F});
-
-    transformMat.scale(scale);
+void Mesh::updateTransform() {
+    transform(translation, rotation, scale);
 
     transformNormalMat = transformMat.normalMatrix();
 }

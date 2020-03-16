@@ -30,7 +30,7 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
 
     // Scene
     Scene scene;
-
+    float WASDspeed = 1.0F;
 
     // Animation
     float angle;

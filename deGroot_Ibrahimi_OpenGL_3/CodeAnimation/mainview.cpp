@@ -64,18 +64,17 @@ void MainView::initializeGL() {
     QOpenGLExtraFunctions *glef = QOpenGLContext::currentContext()->extraFunctions();
     scene.init(glf, glef);
 
+    // Define scene
     size_t cat = scene.addMesh(":/models/cat.obj", ":/textures/cat_diff.png");
-    scene.getMesh(cat)->transform({2.0F, 0.0F, -2.0F}, {0.0f, 0.0f, 0.0f}, 1.0F);
+    scene.getMesh(cat)->setTransform({2.0F, 0.0F, -2.0F}, {0.0f, 0.0f, 0.0f}, 1.0F);
 
     size_t cat2 = scene.addMesh(":/models/cat.obj", ":/textures/cat_diff.png");
-    scene.getMesh(cat2)->transform({-2.0F, 0.0F, -2.0F}, {0.0f, 0.0f, 0.0f}, 1.0F);
+    scene.getMesh(cat2)->setTransform({-2.0F, 0.0F, -2.0F}, {0.0f, 0.0f, 0.0f}, 1.0F);
 
+
+    // Initialize transformations
     scene.setTranslation({0.0, 0.0, -5.0});
-
-    // Initialize transformations.
     scene.updateProjectionTransform(width(), height());
-//    angle = 90.0 / 60.0; // degrees / frame
-//    rotationAxis = {0.0, 1.0, 0.0};
 
     // Start timer
     timer.start(1000.0 / 60.0);

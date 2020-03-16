@@ -20,8 +20,8 @@ private:
     QOpenGLExtraFunctions* ef;
     GLuint VAO, VBO;
     GLuint meshSize;
-    QVector3D translation, globTranslation, rotation, globRotation;
-    float scale = 1.0F, globScale = 1.0F;
+    QVector3D translation, rotation;
+    float scale = 1.0F;
     QMatrix4x4 transformMat;
     QMatrix3x3 transformNormalMat;
     Texture texture;
@@ -46,11 +46,10 @@ public:
     Mesh(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef, const std::string& filepath, const Texture& texture);
     ~Mesh();
     void setTranslation(const QVector3D& t);
-    void setTranslationGlobal(const QVector3D& t);
     void setRotation(const QVector3D& r);
-    void setRotationGlobal(const QVector3D& r);
     void setScale(float s);
-    void setScaleGlobal(float s);
+    void setTransform(const QVector3D& t, const QVector3D& r, float s);
+    void resetTransform();
     void transform(const QVector3D& t, const QVector3D& r, float s);
     void updateTransform();
     void setShadingMode(ShadingMode shading);

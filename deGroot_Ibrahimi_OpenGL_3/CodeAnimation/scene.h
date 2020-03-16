@@ -22,6 +22,10 @@ private:
     QVector3D lightColor = {1.0F, 1.0F, 1.0F};
     QMatrix4x4 projectionTransform;
 
+    // Transforms
+    QVector3D translation, rotation;
+    float scale = 1.0F;
+
 public:
     Scene();
 
@@ -35,6 +39,7 @@ public:
     const std::vector<std::shared_ptr<Mesh>> meshes();
     void draw();
     void updateProjectionTransform(float width, float height);
+    void move(const QVector3D& m);
     void setTranslation(const QVector3D& t);
     void setRotation(const QVector3D& r);
     void setScale(float s);

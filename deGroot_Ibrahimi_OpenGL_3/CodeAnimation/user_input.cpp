@@ -19,8 +19,32 @@ void MainView::keyPressEvent(QKeyEvent *ev) {
 
 // Triggered by releasing a key
 void MainView::keyReleaseEvent(QKeyEvent *ev) {
+    QVector3D movement;
     switch(ev->key()) {
-    case 'A': qDebug() << "A released"; break;
+    case 'W':
+        movement.setZ(-1.0f);
+        scene.move(movement * WASDspeed);
+        break;
+    case 'A':
+        movement.setX(-1.0f);
+        scene.move(movement * WASDspeed);
+        break;
+    case 'S':
+        movement.setZ(1.0f);
+        scene.move(movement * WASDspeed);
+        break;
+    case 'D':
+        movement.setX(1.0f);
+        scene.move(movement * WASDspeed);
+        break;
+    case Qt::Key_Up:
+        movement.setY(1.0f);
+        scene.move(movement * WASDspeed);
+        break;
+    case Qt::Key_Down:
+        movement.setY(-1.0f);
+        scene.move(movement * WASDspeed);
+        break;
     default:
         qDebug() << ev->key() << "released";
         break;

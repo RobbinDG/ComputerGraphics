@@ -20,6 +20,8 @@ std::shared_ptr<Mesh> Scene::getMesh(size_t idx) {
 
 void Scene::draw() {
     for (auto& mesh : _meshes) {
+        mesh->resetTransform();
+        mesh->transform(translation, rotation, scale); // Global transformations
         mesh->draw(lightPosition, lightColor, projectionTransform);
     }
 }
@@ -30,18 +32,20 @@ void Scene::updateProjectionTransform(float width, float height) {
     projectionTransform.perspective(60.0F, aspectRatio, 0.2F, 20.0F);
 }
 
+void Scene::move(const QVector3D& m) {
+    translation -= m;
+}
+
 void Scene::setTranslation(const QVector3D& t) {
-    for (auto& mesh : _meshes) mesh->setTranslationGlobal(t);
+    translation = t;
 }
 
 void Scene::setRotation(const QVector3D& r) {
-    for (auto& mesh : _meshes) mesh->setRotationGlobal(r);
+    rotation = r;
 }
 
 void Scene::setScale(float s) {
-    for (auto& mesh : _meshes) {
-        mesh->setScaleGlobal(s);
-    }
+    scale = s;
 }
 
 void Scene::setShadingMode(Mesh::ShadingMode shading) {
