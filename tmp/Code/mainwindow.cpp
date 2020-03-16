@@ -3,8 +3,6 @@
 
 #include "math.h"
 
-#include <iostream>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow) {
@@ -56,22 +54,21 @@ void MainWindow::on_ScaleSlider_sliderMoved(int value) {
 
 void MainWindow::on_PhongButton_toggled(bool checked) {
     if (checked) {
-        ui->mainView->setShadingMode(Mesh::PHONG);
+        ui->mainView->setShadingMode(MainView::PHONG);
         ui->mainView->update();
     }
-
 }
 
 void MainWindow::on_NormalButton_toggled(bool checked) {
     if (checked) {
-        ui->mainView->setShadingMode(Mesh::NORMAL);
+        ui->mainView->setShadingMode(MainView::NORMAL);
         ui->mainView->update();
     }
 }
 
 void MainWindow::on_GouraudButton_toggled(bool checked) {
     if (checked) {
-        ui->mainView->setShadingMode(Mesh::GOURAUD);
+        ui->mainView->setShadingMode(MainView::GOURAUD);
         ui->mainView->update();
     }
 }

@@ -8,14 +8,18 @@
 class Texture
 {
 private:
+    QOpenGLFunctions* f;
+    QOpenGLExtraFunctions* ef;
     GLuint name;
     std::string path;
 
 public:
-    Texture(const std::string& filepath);
+    Texture(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef,  const std::string& filepath);
+    ~Texture();
+    void bind();
+    void load();
 
 private:
-    void load();
 
     // Useful utility method to convert image to bytes.
     QVector<quint8> imageToBytes(QImage image);

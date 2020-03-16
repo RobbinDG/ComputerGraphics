@@ -1,24 +1,33 @@
 #include "texture.h"
 
-Texture::Texture(const std::string& filepath) : path(filepath)
-{
-    load();
+#include <QOpenGLFunctions>
+
+Texture::Texture(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef,  const std::string& filepath) : f(f), ef(ef), path(filepath) {
+}
+
+Texture::~Texture() {
+    f->glDeleteTextures(1, &name);
+}
+
+void Texture::bind() {
+    f->glActiveTexture(GL_TEXTURE0);
+    f->glBindTexture(GL_TEXTURE_2D, name);
 }
 
 void Texture::load() {
-    glGenTextures(1, &name);
+    f->glGenTextures(1, &name);
     // Set texture parameters.
-    glBindTexture(GL_TEXTURE_2D, name);
+    f->glBindTexture(GL_TEXTURE_2D, name);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     // Push image data to texture.
     QImage image(path.c_str());
     QVector<quint8> imageData = imageToBytes(image);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.width(), image.height(),
+    f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.width(), image.height(),
                  0, GL_RGBA, GL_UNSIGNED_BYTE, imageData.data());
 }

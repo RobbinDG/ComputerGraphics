@@ -1,6 +1,6 @@
-#include "texture.h"
+#include "mainview.h"
 
-QVector<quint8> Texture::imageToBytes(QImage image) {
+QVector<quint8> MainView::imageToBytes(QImage image) {
     // needed since (0,0) is bottom left in OpenGL
     QImage im = image.mirrored();
     QVector<quint8> pixelData;

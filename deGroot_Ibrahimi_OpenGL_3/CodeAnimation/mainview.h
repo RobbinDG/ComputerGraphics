@@ -2,6 +2,7 @@
 #define MAINVIEW_H
 
 #include "model.h"
+#include "scene.h"
 
 #include <QImage>
 #include <QKeyEvent>
@@ -23,49 +24,18 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QOpenGLDebugLogger debugLogger;
     QTimer timer; // Timer used for animation.
 
-    QOpenGLShaderProgram phongShaderProgram;
-
-    // Uniforms for the Phong shader program.
-    GLint uniformModelViewTransformPhong;
-    GLint uniformProjectionTransformPhong;
-    GLint uniformNormalTransformPhong;
-
-    GLint uniformMaterialPhong;
-    GLint uniformLightPositionPhong;
-    GLint uniformLightColorPhong;
-
-    GLint uniformTextureSamplerPhong;
-
-    // Buffers
-    GLuint meshVAO;
-    GLuint meshVBO;
-    GLuint meshSize;
-
-    // Texture
-    GLuint textureName;
 
     // Transforms
-    float scale = 1.0F;
-    QVector3D translation;
-    QVector3D rotation;
     QVector3D rotationAxis;
-    QMatrix4x4 projectionTransform;
-    QMatrix3x3 meshNormalTransform;
-    QMatrix4x4 meshTransform;
 
-    // Phong model constants.
-    QVector4D material = {0.5F, 0.5F, 0.5F, 5.0F};
-    QVector3D lightPosition = {0.0F, 100.0F, 0.0F};
-    QVector3D lightColor = {1.0F, 1.0F, 1.0F};
+    // Scene
+    Scene scene;
+
 
     // Animation
     float angle;
 
 public:
-    enum ShadingMode : GLuint
-    {
-        PHONG = 0, NORMAL, GOURAUD
-    };
 
     MainView(QWidget *parent = 0);
     ~MainView();
@@ -73,7 +43,7 @@ public:
     // Functions for widget input events.
     void setRotation(int rotateX, int rotateY, int rotateZ);
     void setScale(int scale);
-    void setShadingMode(ShadingMode shading);
+    void setShadingMode(Mesh::ShadingMode shading);
 
 protected:
     void initializeGL();
@@ -94,26 +64,6 @@ protected:
 private slots:
     void onMessageLogged( QOpenGLDebugMessage Message );
 
-private:
-    void createShaderProgram();
-    void loadMesh();
-
-    // Loads texture data into the buffer with the name textureName.
-    void loadTextures();
-    void loadTexture(QString file, GLuint texturePtr);
-
-    void destroyModelBuffers();
-
-    void updateProjectionTransform();
-    void updateModelTransforms();
-
-    void updatePhongUniforms();
-
-    // Useful utility method to convert image to bytes.
-    QVector<quint8> imageToBytes(QImage image);
-
-    // The current shader to use.
-    ShadingMode currentShader = PHONG;
 };
 
 #endif // MAINVIEW_H
