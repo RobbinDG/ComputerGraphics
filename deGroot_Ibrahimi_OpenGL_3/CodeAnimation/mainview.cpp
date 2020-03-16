@@ -1,6 +1,8 @@
 #include "mainview.h"
 #include "model.h"
 #include "scene.h"
+#include "animatedmesh.h"
+#include "localrotateanimation.h"
 
 #include <iostream>
 #include <QOpenGLFunctions>
@@ -66,11 +68,14 @@ void MainView::initializeGL() {
 
     // Define scene
     size_t cat = scene.addMesh(":/models/cat.obj", ":/textures/cat_diff.png");
-    scene.getMesh(cat)->setTransform({2.0F, 0.0F, -2.0F}, {0.0f, 0.0f, 0.0f}, 1.0F);
+    scene.getObject(cat)->setTransform({2.0F, 0.0F, -2.0F}, {0.0f, 0.0f, 0.0f}, 1.0F);
 
-    size_t cat2 = scene.addMesh(":/models/cat.obj", ":/textures/cat_diff.png");
-    scene.getMesh(cat2)->setTransform({-2.0F, 0.0F, -2.0F}, {0.0f, 0.0f, 0.0f}, 1.0F);
-
+    Texture catTexture(glf, glef, ":/textures/cat_diff.png");
+    auto cat2mesh = new Mesh(glf, glef, ":/models/cat.obj", catTexture);
+    cat2mesh->setTransform({-2.0F, 0.0F, -2.0F}, {0.0f, 0.0f, 0.0f}, 1.0F);
+    auto cat2animation = new LocalRotateAnimation(360, 1.0, {0.0, 1.0, 0.0});
+    auto cat2 = new AnimatedMesh(cat2mesh, reinterpret_cast<Animation*>(cat2animation));
+    scene.addObject(reinterpret_cast<Drawable*>(cat2));
 
     // Initialize transformations
     scene.setTranslation({0.0, 0.0, -5.0});
@@ -145,7 +150,7 @@ void MainView::setScale(int newScale) {
     scene.setScale(static_cast<float>(newScale) / 100.0F);
 }
 
-void MainView::setShadingMode(Mesh::ShadingMode shading) {
+void MainView::setShadingMode(Drawable::ShadingMode shading) {
     scene.setShadingMode(shading);
 }
 

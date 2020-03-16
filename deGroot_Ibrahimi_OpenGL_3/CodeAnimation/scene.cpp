@@ -2,27 +2,38 @@
 
 Scene::Scene() {}
 
+Scene::~Scene() {
+    for (auto& obj : _objects) {
+        delete obj;
+    }
+}
+
 void Scene::init(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef) {
     glf = f;
     glef = ef;
 }
 
-size_t Scene::addMesh(const std::string& meshpath, const std::string& texturepath) {
-    Texture texture(glf, glef, texturepath);
-    auto mesh = std::make_shared<Mesh>(glf, glef, meshpath, texture);
-    _meshes.push_back(std::move(mesh));
-    return _meshes.size() - 1;
+size_t Scene::addObject(Drawable *obj) {
+    _objects.push_back(obj);
+    return _objects.size() - 1;
 }
 
-std::shared_ptr<Mesh> Scene::getMesh(size_t idx) {
-    return _meshes[idx];
+size_t Scene::addMesh(const std::string& meshpath, const std::string& texturepath) {
+    Texture texture(glf, glef, texturepath);
+    auto mesh = new Mesh(glf, glef, meshpath, texture);
+    _objects.push_back(reinterpret_cast<Drawable*>(mesh));
+    return _objects.size() - 1;
+}
+
+Drawable* Scene::getObject(size_t idx) {
+    return _objects[idx];
 }
 
 void Scene::draw() {
-    for (auto& mesh : _meshes) {
-        mesh->resetTransform();
-        mesh->transform(translation, rotation, scale); // Global transformations
-        mesh->draw(lightPosition, lightColor, projectionTransform);
+    for (auto& object : _objects) {
+        object->resetTransform();
+        object->transform(translation, rotation, scale); // Global transformations
+        object->draw(lightPosition, lightColor, projectionTransform);
     }
 }
 
@@ -48,6 +59,6 @@ void Scene::setScale(float s) {
     scale = s;
 }
 
-void Scene::setShadingMode(Mesh::ShadingMode shading) {
-    for (auto& mesh : _meshes) mesh->setShadingMode(shading);
+void Scene::setShadingMode(Drawable::ShadingMode shading) {
+    for (auto& obj : _objects) obj->setShadingMode(shading);
 }

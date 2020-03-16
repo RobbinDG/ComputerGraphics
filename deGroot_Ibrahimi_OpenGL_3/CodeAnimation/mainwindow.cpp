@@ -56,7 +56,7 @@ void MainWindow::on_ScaleSlider_sliderMoved(int value) {
 
 void MainWindow::on_PhongButton_toggled(bool checked) {
     if (checked) {
-        ui->mainView->setShadingMode(Mesh::PHONG);
+        ui->mainView->setShadingMode(Drawable::PHONG);
         ui->mainView->update();
     }
 
@@ -64,14 +64,14 @@ void MainWindow::on_PhongButton_toggled(bool checked) {
 
 void MainWindow::on_NormalButton_toggled(bool checked) {
     if (checked) {
-        ui->mainView->setShadingMode(Mesh::NORMAL);
+        ui->mainView->setShadingMode(Drawable::NORMAL);
         ui->mainView->update();
     }
 }
 
 void MainWindow::on_GouraudButton_toggled(bool checked) {
     if (checked) {
-        ui->mainView->setShadingMode(Mesh::GOURAUD);
+        ui->mainView->setShadingMode(Drawable::GOURAUD);
         ui->mainView->update();
     }
 }

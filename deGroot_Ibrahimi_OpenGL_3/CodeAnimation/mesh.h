@@ -2,18 +2,15 @@
 #define MESH_H
 
 #include "texture.h"
+#include "drawable.h"
 
 #include <QOpenGLFunctions_3_3_Core>
 #include <QOpenGLShaderProgram>
 #include <QMatrix4x4>
 
-class Mesh
+class Mesh : Drawable
 {
 public:
-    enum ShadingMode : GLuint
-    {
-        PHONG = 0, NORMAL, GOURAUD
-    };
 
 private:
     QOpenGLFunctions* f;
@@ -45,15 +42,17 @@ private:
 public:
     Mesh(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef, const std::string& filepath, const Texture& texture);
     ~Mesh();
-    void setTranslation(const QVector3D& t);
-    void setRotation(const QVector3D& r);
-    void setScale(float s);
-    void setTransform(const QVector3D& t, const QVector3D& r, float s);
-    void resetTransform();
-    void transform(const QVector3D& t, const QVector3D& r, float s);
+    void setTranslation(const QVector3D& t) override;
+    void setRotation(const QVector3D& r) override;
+    void setScale(float s) override;
+    void setTransform(const QVector3D& t, const QVector3D& r, float s) override;
+    void resetTransform() override;
+    void transform(const QVector3D& t, const QVector3D& r, float s) override;
+    void transform(const QMatrix4x4& m);
+    void preTransform(const QMatrix4x4& m);
     void updateTransform();
-    void setShadingMode(ShadingMode shading);
-    void draw(QVector3D& lightPosition, const QVector3D& lightColor, const QMatrix4x4& projectionTransform);
+    void setShadingMode(ShadingMode shading) override;
+    void draw(QVector3D& lightPosition, const QVector3D& lightColor, const QMatrix4x4& projectionTransform) override;
 
 private:
     void load();

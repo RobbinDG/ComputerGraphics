@@ -30,7 +30,7 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
 
     // Scene
     Scene scene;
-    float WASDspeed = 1.0F;
+    float WASDspeed = 0.3F;
 
     // Animation
     float angle;
@@ -43,7 +43,7 @@ public:
     // Functions for widget input events.
     void setRotation(int rotateX, int rotateY, int rotateZ);
     void setScale(int scale);
-    void setShadingMode(Mesh::ShadingMode shading);
+    void setShadingMode(Drawable::ShadingMode shading);
 
 protected:
     void initializeGL();

@@ -8,6 +8,10 @@ TEMPLATE = app
 CONFIG += c++14
 
 SOURCES += \
+    animatedmesh.cpp \
+    animation.cpp \
+    drawable.cpp \
+    localrotateanimation.cpp \
     main.cpp \
     mainwindow.cpp \
     mainview.cpp \
@@ -19,6 +23,10 @@ SOURCES += \
     utility.cpp
 
 HEADERS += \
+    animatedmesh.h \
+    animation.h \
+    drawable.h \
+    localrotateanimation.h \
     mainwindow.h \
     mainview.h \
     mesh.h \

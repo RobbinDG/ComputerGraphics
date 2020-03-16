@@ -12,7 +12,7 @@
 class Scene
 {
 private:
-    std::vector<std::shared_ptr<Mesh>> _meshes;
+    std::vector<Drawable*> _objects;
 
     QOpenGLFunctions* glf;
     QOpenGLExtraFunctions* glef;
@@ -28,22 +28,24 @@ private:
 
 public:
     Scene();
+    ~Scene();
 
     /**
      * @brief addMesh creates and adds mesh to scene.
      * @return the mesh index in the scene.
      */
     void init(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef);
+    size_t addObject(Drawable* obj);
     size_t addMesh(const std::string& meshpath, const std::string& texturepath);
-    std::shared_ptr<Mesh> getMesh(size_t idx);
-    const std::vector<std::shared_ptr<Mesh>> meshes();
+    Drawable* getObject(size_t idx);
+    const std::vector<Drawable*> meshes();
     void draw();
     void updateProjectionTransform(float width, float height);
     void move(const QVector3D& m);
     void setTranslation(const QVector3D& t);
     void setRotation(const QVector3D& r);
     void setScale(float s);
-    void setShadingMode(Mesh::ShadingMode shading);
+    void setShadingMode(Drawable::ShadingMode shading);
 };
 
 #endif // SCENE_H

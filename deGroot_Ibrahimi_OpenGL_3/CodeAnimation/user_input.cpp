@@ -4,21 +4,6 @@
 
 // Triggered by pressing a key
 void MainView::keyPressEvent(QKeyEvent *ev) {
-    switch(ev->key()) {
-    case 'A': qDebug() << "A pressed"; break;
-    default:
-        // ev->key() is an integer. For alpha numeric characters keys it equivalent with the char value ('A' == 65, '1' == 49)
-        // Alternatively, you could use Qt Key enums, see http://doc.qt.io/qt-5/qt.html#Key-enum
-        qDebug() << ev->key() << "pressed";
-        break;
-    }
-
-    // Used to update the screen after changes
-    update();
-}
-
-// Triggered by releasing a key
-void MainView::keyReleaseEvent(QKeyEvent *ev) {
     QVector3D movement;
     switch(ev->key()) {
     case 'W':
@@ -45,6 +30,20 @@ void MainView::keyReleaseEvent(QKeyEvent *ev) {
         movement.setY(-1.0f);
         scene.move(movement * WASDspeed);
         break;
+    default:
+        // ev->key() is an integer. For alpha numeric characters keys it equivalent with the char value ('A' == 65, '1' == 49)
+        // Alternatively, you could use Qt Key enums, see http://doc.qt.io/qt-5/qt.html#Key-enum
+        qDebug() << ev->key() << "pressed";
+        break;
+    }
+
+    // Used to update the screen after changes
+    update();
+}
+
+// Triggered by releasing a key
+void MainView::keyReleaseEvent(QKeyEvent *ev) {
+    switch(ev->key()) {
     default:
         qDebug() << ev->key() << "released";
         break;

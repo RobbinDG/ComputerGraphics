@@ -1,8 +1,6 @@
 #include "mesh.h"
 #include "model.h"
 
-#include <iostream>
-
 #include <QImage>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLDebugLogger>
@@ -54,6 +52,14 @@ void Mesh::transform(const QVector3D& t, const QVector3D& r, float s) {
     transformMat.rotate(r.z(), {0.0F, 0.0F, 1.0F});
 
     transformMat.scale(s);
+}
+
+void Mesh::transform(const QMatrix4x4& m) {
+    transformMat *= m;
+}
+
+void Mesh::preTransform(const QMatrix4x4& m) {
+    transformMat = m * transformMat;
 }
 
 void Mesh::updateTransform() {
