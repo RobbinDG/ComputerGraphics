@@ -1,13 +1,16 @@
-This is a README file
+The changes we made are the following:
 
-When submitting your assignment, describe (briefly) the changes you made and what difficulties you encountered in this file.
+Common animation:
 
-Also describe what controls (key short-cuts, mouse clicks, mouse movement etc) and possible bonus assignments you implemented, so we can check them more easily.
 
-If you have any suggestions/feedback for improving the practical assignments or support from teaching assistants, you may include it here OR post in anonymously on Nestor under Feedback.
+Advanced vertex manipulation:
+ - We implemented everything that was explained in the assignment. Luckily, we did not encounter any issues with this sub-assignment as everything went fairly smoothly.
+ - We included images in the Screenshot folder for every part of this sub-assignment.
+   For 3.1.png we used the following settings:
+    - Amplitude = 0.4
+    - Frequency = 4.8
+    - Time = 1
+    - Phi = 0
 
-3.1.png:
- - Amplitude = 0.4
- - Frequency = 4.8
- - Time = 1
- - Phi = 0
+Suggestions:
+It was a bit unclear from the assignment and TA interaction whether a light source should stay fixed, or get transformed along with the object(s). Maybe this could be improved next year. Moreover, the template code had a GUI bug that resulted in strange controls on machines running macOS. A TA luckily helped me solve this fairly quickly, but it would be nice if this could be fixed from the beginning to prevent confusion. Overall it was a very nice and clear assignment, well done!
