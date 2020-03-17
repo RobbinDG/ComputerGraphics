@@ -5,19 +5,21 @@
 
 uniform sampler2D samplerUniform;
 
-// Specify the inputs to the fragment shader
-// These must have the same type and name!
-in vec3 color;
+// The inputs to the fragment shader
+in vec3 Ia;
+in vec3 Id;
+in vec3 Is;
 in vec2 textureCoords;
 
-// Specify the Uniforms of the fragment shaders
-// uniform vec3 lightPosition; // for example
-
-// Specify the output of the fragment shader
-// Usually a vec4 describing a color (Red, Green, Blue, Alpha/Transparency)
+// The output of the fragment shader
 out vec4 fColor;
 
 void main()
 {
-    fColor = texture(samplerUniform, textureCoords)q;
+    // Apply texture
+    vec4 textureColor = texture(samplerUniform, textureCoords);
+    vec3 color = Ia * textureColor.rgb + Id * textureColor.rgb + Is;
+
+    // Set color
+    fColor = vec4(color, 1);
 }

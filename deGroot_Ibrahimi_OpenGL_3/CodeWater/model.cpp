@@ -1,7 +1,6 @@
 #include "model.h"
 
 #include <QDebug>
-#include <QMatrix4x4>
 #include <QFile>
 #include <QTextStream>
 
@@ -43,17 +42,9 @@ Model::Model(QString filename) {
         // create an array version of the data
         unpackIndexes();
 
-        // Allign all vertex indices with the right normal/texturecoord indices
+        // Align all vertex indices with the right normal/texturecoord indices
         alignData();
     }
-}
-
-float max(float a, float b) {
-    return a > b ? a : b;
-}
-
-float max(float a, float b, float c) {
-    return max(max(a, b), c);
 }
 
 /**
@@ -61,32 +52,11 @@ float max(float a, float b, float c) {
  *
  * Unitize the model by scaling so that it fits a box with sides 1
  * and origin at 0,0,0
- * Usefull for models with different scales
+ * Useful for models with different scales
  *
  */
 void Model::unitize() {
-    QVector3D minCoord(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-    QVector3D maxCoord(std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
-
-    for (QVector3D vertex : vertices) {
-        if (minCoord.x() < vertex.x() && minCoord.y() < vertex.y() && minCoord.z() < vertex.z()) {
-            minCoord = vertex;
-        }
-
-        if (maxCoord.x() > vertex.x() && maxCoord.y() > vertex.y() && maxCoord.z() > vertex.z()) {
-            maxCoord = vertex;
-        }
-    }
-
-    float biggestEdge = max(maxCoord.x()-minCoord.x(), maxCoord.y()-minCoord.y(), maxCoord.z()-minCoord.z());
-
-    qDebug() << "minCoord: " << minCoord << "\n";
-    qDebug() << "maxCoord: " << maxCoord << "\n";
-    qDebug() << "biggestEdge: " << biggestEdge << "\n";
-
-    for (QVector3D vertex : vertices) {
-        vertex = vertex * (5.0);
-    }
+    qDebug() << "Unitize not implemented.";
 }
 
 QVector<QVector3D> Model::getVertices() {

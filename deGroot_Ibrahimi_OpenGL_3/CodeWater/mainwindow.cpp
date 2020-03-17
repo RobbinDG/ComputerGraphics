@@ -1,10 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "math.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    ui(new Ui::MainWindow) {
     ui->setupUi(this);
 }
 
@@ -23,19 +24,19 @@ void MainWindow::on_ResetRotationButton_clicked(bool checked) {
     ui->mainView->setRotation(0, 0, 0);
 }
 
-void MainWindow::on_RotationDialX_valueChanged(int value) {
+void MainWindow::on_RotationDialX_sliderMoved(int value) {
     ui->mainView->setRotation(value,
                               ui->RotationDialY->value(),
                               ui->RotationDialZ->value());
 }
 
-void MainWindow::on_RotationDialY_valueChanged(int value) {
+void MainWindow::on_RotationDialY_sliderMoved(int value) {
     ui->mainView->setRotation(ui->RotationDialX->value(),
                               value,
                               ui->RotationDialZ->value());
 }
 
-void MainWindow::on_RotationDialZ_valueChanged(int value) {
+void MainWindow::on_RotationDialZ_sliderMoved(int value) {
     ui->mainView->setRotation(ui->RotationDialX->value(),
                               ui->RotationDialY->value(),
                               value);
@@ -44,11 +45,11 @@ void MainWindow::on_RotationDialZ_valueChanged(int value) {
 void MainWindow::on_ResetScaleButton_clicked(bool checked) {
     Q_UNUSED(checked);
     ui->ScaleSlider->setValue(100);
-    on_ScaleSlider_valueChanged(100);
+    ui->mainView->setScale(100);
 }
 
-void MainWindow::on_ScaleSlider_valueChanged(int value) {
-    ui->mainView->setScale(value*10);
+void MainWindow::on_ScaleSlider_sliderMoved(int value) {
+    ui->mainView->setScale(value);
 }
 
 void MainWindow::on_PhongButton_toggled(bool checked) {

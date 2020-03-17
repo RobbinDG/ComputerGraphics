@@ -1,6 +1,7 @@
 #include "mainview.h"
 #include "model.h"
 #include "vertex.h"
+#include "QVector3D"
 
 #include <QDateTime>
 
@@ -96,13 +97,31 @@ void MainView::createShaderProgram() {
     shaderPrograms[2].addShaderFromSourceFile(QOpenGLShader::Fragment,
                                            ":/shaders/fragshader_gouraud.glsl");
 
+    shaderPrograms[0].link();
     shaderPrograms[1].link();
+    shaderPrograms[2].link();
 
-    // Get the uniforms
-    uniformModelViewTransform = shaderPrograms[1].uniformLocation("modelViewTransform");
-    uniformProjectionTransform = shaderPrograms[1].uniformLocation("projectionTransform");
-    uniformNormalTransform = shaderPrograms[1].uniformLocation("transNorms");
-    uniformSampler = shaderPrograms[0].uniformLocation("samplerUniform");
+
+    // Get the Phong uniforms
+    uniformPhongModelViewTransform = shaderPrograms[0].uniformLocation("modelViewTransform");
+    uniformPhongProjectionTransform = shaderPrograms[0].uniformLocation("projectionTransform");
+    uniformPhongNormalTransform = shaderPrograms[0].uniformLocation("transNorms");
+    uniformPhongMaterial = shaderPrograms[0].uniformLocation("material");
+    uniformPhongSampler = shaderPrograms[0].uniformLocation("samplerUniform");
+
+    // Get the Normal uniforms
+    uniformNormalModelViewTransform = shaderPrograms[1].uniformLocation("modelViewTransform");
+    uniformNormalProjectionTransform = shaderPrograms[1].uniformLocation("projectionTransform");
+    uniformNormalNormalTransform = shaderPrograms[1].uniformLocation("transNorms");
+    uniformNormalMaterial = shaderPrograms[1].uniformLocation("material");
+    uniformNormalSampler = shaderPrograms[1].uniformLocation("samplerUniform");
+
+    // Get the Gouraud uniforms
+    uniformGouraudModelViewTransform = shaderPrograms[2].uniformLocation("modelViewTransform");
+    uniformGouraudProjectionTransform = shaderPrograms[2].uniformLocation("projectionTransform");
+    uniformGouraudNormalTransform = shaderPrograms[2].uniformLocation("transNorms");
+    uniformGouraudMaterial = shaderPrograms[2].uniformLocation("material");
+    uniformGouraudSampler = shaderPrograms[2].uniformLocation("samplerUniform");
 }
 
 void MainView::loadMesh() {
@@ -165,9 +184,6 @@ void MainView::loadMesh() {
 void MainView::loadTexture(QString file, GLuint texturePtr) {
     glBindTexture(GL_TEXTURE_2D, texturePtr);
 
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, );
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
@@ -175,7 +191,7 @@ void MainView::loadTexture(QString file, GLuint texturePtr) {
     QVector<quint8> imageBytes = imageToBytes(image);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, imageBytes.data());
-//    glGenerateMipmap(GL_TEXTURE_2D);
+    glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 // --- OpenGL drawing
@@ -188,17 +204,31 @@ void MainView::loadTexture(QString file, GLuint texturePtr) {
  */
 void MainView::paintGL() {
     QMatrix3x3 transNorms = meshTransform.normalMatrix();
+    QVector3D material(0.3, 1, 0.2);
 
     // Clear the screen before rendering
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shaderPrograms[currentShader].bind();
 
-    // Set the projection matrix
-    glUniformMatrix4fv(uniformProjectionTransform, 1, GL_FALSE, projectionTransform.data());
-    glUniformMatrix4fv(uniformModelViewTransform, 1, GL_FALSE, meshTransform.data());
-    glUniformMatrix3fv(uniformNormalTransform, 1, GL_FALSE, transNorms.data());
-    glUniform1i(uniformSampler, 0);
+    // Set the projection matrix for the current shader
+    glUniformMatrix4fv(uniformPhongProjectionTransform, 1, GL_FALSE, projectionTransform.data());
+    glUniformMatrix4fv(uniformPhongModelViewTransform, 1, GL_FALSE, meshTransform.data());
+    glUniformMatrix3fv(uniformPhongNormalTransform, 1, GL_FALSE, transNorms.data());
+    glUniform3fv(uniformPhongMaterial, 1, reinterpret_cast<GLfloat *>(&material[0]));
+    glUniform1i(uniformPhongSampler, 0);
+
+    glUniformMatrix4fv(uniformNormalProjectionTransform, 1, GL_FALSE, projectionTransform.data());
+    glUniformMatrix4fv(uniformNormalModelViewTransform, 1, GL_FALSE, meshTransform.data());
+    glUniformMatrix3fv(uniformNormalNormalTransform, 1, GL_FALSE, transNorms.data());
+    glUniform3fv(uniformNormalMaterial, 1, reinterpret_cast<GLfloat *>(&material[0]));
+    glUniform1i(uniformNormalSampler, 0);
+
+    glUniformMatrix4fv(uniformGouraudProjectionTransform, 1, GL_FALSE, projectionTransform.data());
+    glUniformMatrix4fv(uniformGouraudModelViewTransform, 1, GL_FALSE, meshTransform.data());
+    glUniformMatrix3fv(uniformGouraudNormalTransform, 1, GL_FALSE, transNorms.data());
+    glUniform3fv(uniformGouraudMaterial, 1, reinterpret_cast<GLfloat *>(&material[0]));
+    glUniform1i(uniformGouraudSampler, 0);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texturePtr);

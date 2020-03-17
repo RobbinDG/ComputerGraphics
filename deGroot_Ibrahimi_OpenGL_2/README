@@ -1,11 +1,18 @@
-This is a README file
+Assignment OpenGL 2 - de Groot, Robbin; Ibrahimi, Erblin.
 
-When submitting your assignment, describe (briefly) the changes you made and what difficulties you encountered in this file.
+List of modifications:
+ - We implemented Phong/Normal/Gouraud shading, and made separate fragment- and vertex shaders for both
+ - We added the ability to be able to switch between these shaders in the UI
+ - We added the ability to be able to load .png textures onto the meshes
 
-Also describe what controls (key short-cuts, mouse clicks, mouse movement etc) and possible bonus assignments you implemented, so we can check them more easily.
+User instructions:
+ - The rotating buttons at the top rotate all elements around their axes in the x, y and z direction. You can reset the rotation with the "reset rotation" button.
+ - Similarly, one may scale all objects by using the scale slider. This also can be reset with the appropriate button.
+ - Under the "Shading" section you can now choose which shader you would like to see/apply
 
-If you have any suggestions/feedback for improving the practical assignments or support from teaching assistants, you may include it here OR post in anonymously on Nestor under Feedback.
+Difficulties:
+ - We initially tried to multiply the texture color with the appropriate Phong illumination model components in the vertex shader, which led to undesired results. We ended up fixing this by passing the Ia, Id and Is to the fragment shader and multiplying the texture colours there
+ - We could not get unitize to work in time, so there is some leftover code in there
 
-
-When rendering the mesh without the normal matrix applied shows uniform colours independent of transformations. When applying the normal matrix, the normals are relative to the transformations.
-
+Assignment questions:
+ - When rendering the mesh without the normal matrix applied, it shows the uniform colours independent of transformations. When applying the normal matrix, on the other hand, the normals are relative to the transformations.
