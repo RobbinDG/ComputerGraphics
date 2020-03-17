@@ -25,6 +25,10 @@ void Mesh::setTranslation(const QVector3D& t) {
     translation = t;
 }
 
+void Mesh::translate(const QVector3D& t) {
+    translation += t;
+}
+
 void Mesh::setRotation(const QVector3D& r) {
     rotation = r;
 }

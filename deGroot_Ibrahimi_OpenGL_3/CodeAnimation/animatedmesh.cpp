@@ -13,6 +13,10 @@ void AnimatedMesh::setTranslation(const QVector3D& t) {
     mesh->setTranslation(t);
 }
 
+void AnimatedMesh::translate(const QVector3D& t) {
+    mesh->translate(t);
+}
+
 void AnimatedMesh::setRotation(const QVector3D& r) {
     mesh->setRotation(r);
 }

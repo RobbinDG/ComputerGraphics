@@ -15,6 +15,7 @@ public:
     Drawable();
     virtual ~Drawable();
     virtual void setTranslation(const QVector3D& t) = 0;
+    virtual void translate(const QVector3D& t) = 0;
     virtual void setRotation(const QVector3D& r) = 0;
     virtual void setScale(float s) = 0;
     virtual void setTransform(const QVector3D& t, const QVector3D& r, float s) = 0;

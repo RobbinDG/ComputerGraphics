@@ -2,6 +2,7 @@
 #define LOCALROTATEANIMATION_H
 
 #include "animation.h"
+#include <QVector3D>
 
 class LocalRotateAnimation : Animation
 {
