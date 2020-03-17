@@ -89,7 +89,7 @@ void MainView::initializeGL() {
 
     createShaderProgram();
     loadMesh();
-    loadTextures();
+//    loadTextures();
 
     // Initialize transformations.
     updateProjectionTransform();
@@ -156,8 +156,8 @@ void MainView::loadMesh() {
 }
 
 void MainView::loadTextures() {
-//    glGenTextures(1, &textureName);
-//    loadTexture(":/textures/cat_diff.png", textureName);
+    glGenTextures(1, &textureName);
+    loadTexture(":/textures/cat_diff.png", textureName);
 }
 
 void MainView::loadTexture(QString file, GLuint textureName) {
@@ -196,9 +196,9 @@ void MainView::paintGL() {
     shaderProgram.bind();
     updateUniforms();
 
-    // Set the texture and draw the mesh.
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textureName);
+    // Set the texture and draw the mesh. Disabled because unnecessary for this project
+//    glActiveTexture(GL_TEXTURE0);
+//    glBindTexture(GL_TEXTURE_2D, textureName);
 
     glBindVertexArray(meshVAO);
     glDrawArrays(GL_TRIANGLES, 0, meshSize);

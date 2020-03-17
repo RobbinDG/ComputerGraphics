@@ -7,6 +7,9 @@ Common animation:
 
 Advanced vertex manipulation:
  - We implemented everything that was explained in the assignment. Luckily, we did not encounter any issues with this sub-assignment as everything went fairly smoothly.
+ - Moreover, it was unclear whether the implementation for Gouraud shading and Normal mapping should be implemented, so we left it as is given the template code.
+ - We disabled the ability to load textures onto the mesh as it was not necessary for this part of the assignment. We left all the code in though in case it is ever needed, but simply commented it out.
+ - Similarly, we also left the original code in for the fragment shader to show what we used.
  - We included images in the Screenshot folder for every part of this sub-assignment.
    For 3.1.png we used the following settings:
     - Amplitude = 0.4

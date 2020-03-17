@@ -17,7 +17,7 @@ void main()
 {
 //    The following were used for the previous parts of the assignment
 //    fColor = vec4(uv[0], uv[1], 0.0F, 1.0F);
-//    fColor = vec4(0.5 * normal + vec3(0.5), 1.0F);
+//    fColor = vec4(0.5 * N + vec3(0.5), 1.0F);
 //    fColor = vec4(materialColor, 1.0F);
     vec3 lightPosition = normalize(relativeLightPosition - vertexCoord);
     vec3 L = normalize(lightPosition - vertexCoord);
