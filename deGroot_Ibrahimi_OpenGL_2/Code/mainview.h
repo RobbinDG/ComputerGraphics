@@ -58,10 +58,26 @@ private:
     GLint currentShader;
     QOpenGLShaderProgram shaderPrograms[3];
 
-    GLint uniformModelViewTransform;
-    GLint uniformProjectionTransform;
-    GLint uniformNormalTransform;
-    GLint uniformSampler;
+    // Phong uniforms
+    GLint uniformPhongModelViewTransform;
+    GLint uniformPhongProjectionTransform;
+    GLint uniformPhongNormalTransform;
+    GLint uniformPhongMaterial;
+    GLint uniformPhongSampler;
+
+    // Normal uniforms
+    GLint uniformNormalModelViewTransform;
+    GLint uniformNormalProjectionTransform;
+    GLint uniformNormalNormalTransform;
+    GLint uniformNormalMaterial;
+    GLint uniformNormalSampler;
+
+    // Gouraud uniforms
+    GLint uniformGouraudModelViewTransform;
+    GLint uniformGouraudProjectionTransform;
+    GLint uniformGouraudNormalTransform;
+    GLint uniformGouraudMaterial;
+    GLint uniformGouraudSampler;
 
     // Mesh values
     GLuint meshVAO;
