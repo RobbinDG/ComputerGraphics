@@ -29,6 +29,8 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QVector3D rotationAxis;
 
     // Scene
+    QOpenGLFunctions* glf;
+    QOpenGLExtraFunctions* glef;
     Scene scene;
     float WASDspeed = 0.3F;
 
@@ -60,6 +62,12 @@ protected:
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent *ev);
     void wheelEvent(QWheelEvent *ev);
+
+private:
+    /**
+     * @brief setScene: sets the scene to the assignment scene.
+     */
+    void setScene();
 
 private slots:
     void onMessageLogged( QOpenGLDebugMessage Message );

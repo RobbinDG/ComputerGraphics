@@ -1,9 +1,16 @@
 The changes we made are the following:
 
 Common animation:
- - We implemented a simple scene matching all requirements. Movement is possible using WASD + up and down arrows.
- - The code has been transformed to be reusable and properly object oriented for easy scene construction. Animations can be reused for multiple objects (not done in this scene)
- - We implemented 2 animation classes, but more can easily be created. An animation can be paired with a drawable object in order to animate it easily.
+ - We implemented a simple scene matching all requirements. Movement is possible using WASD + up and down arrows. WS move forwards and backwards, AD move sideways and up/down upwards and downwards. We achieve this by moving the entire Scene in the inverse direction. This is easily implemented due to techniques described the next bullet point.
+ - The code has been transformed to be reusable and properly object oriented for easy scene construction. We created Scene, Mesh, Texture, Animation, AnimatedMesh and various abstract classes. These all are reusable objects. Animations can be reused for multiple objects (not done in this scene). Because of the structure and abstractions of animations and animated meshes, we can nest/stack animations allowing us to apply multiple animations to a single mesh.
+ - We implemented 4 animation classes, but more can easily be created.  Specifically, we made:
+   + Local coordinate rotation
+   + Global coordinate rotation
+   + Back and forth movement
+   + Bouncing with acceleration and deceleration. 
+An animation can be paired with a drawable object in order to animate it easily.
+ - The scene object allows for collective access to multiple drawable objects, and exposes methods to modify the entire scene around the global coordinate system. This is how we implement the UI buttons and WASD+up/down buttons.
+ - The scene presented is quite simple and more of a tech-demo than anything. This is mainly due to a lack of inspiration and time given the amount of work invested into extending the framework.
 
 Advanced vertex manipulation:
  - We implemented everything that was explained in the assignment. Luckily, we did not encounter any issues with this sub-assignment as everything went fairly smoothly.

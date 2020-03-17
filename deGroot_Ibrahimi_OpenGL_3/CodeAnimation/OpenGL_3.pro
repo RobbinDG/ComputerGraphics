@@ -11,7 +11,9 @@ SOURCES += \
     animatedmesh.cpp \
     animation.cpp \
     backandforthanimation.cpp \
+    bounceanimation.cpp \
     drawable.cpp \
+    globalrotateanimation.cpp \
     localrotateanimation.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -26,8 +28,11 @@ SOURCES += \
 HEADERS += \
     animatedmesh.h \
     animation.h \
+    animations.h \
     backandforthanimation.h \
+    bounceanimation.h \
     drawable.h \
+    globalrotateanimation.h \
     localrotateanimation.h \
     mainwindow.h \
     mainview.h \

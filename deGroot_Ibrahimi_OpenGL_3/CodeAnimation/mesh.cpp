@@ -7,7 +7,7 @@
 #include <QOpenGLFunctions_3_3_Core>
 #include <QOpenGLExtraFunctions>
 
-Mesh::Mesh(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef, const std::string& filepath, const Texture& texture)
+Mesh::Mesh(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef, const std::string& filepath, Texture texture)
     : f(f), ef(ef), texture(texture), filepath(filepath)
 {
     load();

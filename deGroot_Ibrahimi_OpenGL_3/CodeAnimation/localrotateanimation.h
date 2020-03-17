@@ -4,7 +4,7 @@
 #include "animation.h"
 #include <QVector3D>
 
-class LocalRotateAnimation : Animation
+class LocalRotateAnimation : public Animation
 {
 protected:
     float angle;

@@ -8,20 +8,8 @@ Scene::~Scene() {
     }
 }
 
-void Scene::init(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef) {
-    glf = f;
-    glef = ef;
-}
-
 size_t Scene::addObject(Drawable *obj) {
     _objects.push_back(obj);
-    return _objects.size() - 1;
-}
-
-size_t Scene::addMesh(const std::string& meshpath, const std::string& texturepath) {
-    Texture texture(glf, glef, texturepath);
-    auto mesh = new Mesh(glf, glef, meshpath, texture);
-    _objects.push_back(reinterpret_cast<Drawable*>(mesh));
     return _objects.size() - 1;
 }
 

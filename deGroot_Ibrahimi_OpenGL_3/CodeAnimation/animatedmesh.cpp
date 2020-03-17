@@ -1,6 +1,6 @@
 #include "animatedmesh.h"
 
-AnimatedMesh::AnimatedMesh(Mesh* mesh, Animation* animation) : mesh(mesh), animation(animation)
+AnimatedMesh::AnimatedMesh(Drawable* mesh, Animation* animation) : mesh(mesh), animation(animation)
 {
 }
 
@@ -35,6 +35,10 @@ void AnimatedMesh::resetTransform() {
 
 void AnimatedMesh::transform(const QVector3D& t, const QVector3D& r, float s) {
     mesh->transform(t, r, s);
+}
+
+void AnimatedMesh::transform(const QMatrix4x4& m) {
+    mesh->transform(m);
 }
 
 void AnimatedMesh::setShadingMode(ShadingMode shading) {

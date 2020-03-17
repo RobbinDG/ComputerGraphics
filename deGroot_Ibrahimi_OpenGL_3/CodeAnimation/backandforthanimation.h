@@ -4,7 +4,7 @@
 #include "drawable.h"
 #include "animation.h"
 
-class BackAndForthAnimation : Animation
+class BackAndForthAnimation : public Animation
 {
 private:
     float speed;

@@ -4,6 +4,10 @@
 #include <QVector3D>
 #include <QOpenGLFunctions_3_3_Core>
 
+/**
+ * @brief The Drawable class
+ * An abstract class describing an OpenGL drawable 3D object
+ */
 class Drawable
 {
 public:
@@ -21,6 +25,7 @@ public:
     virtual void setTransform(const QVector3D& t, const QVector3D& r, float s) = 0;
     virtual void resetTransform() = 0;
     virtual void transform(const QVector3D& t, const QVector3D& r, float s) = 0;
+    virtual void transform(const QMatrix4x4& m) = 0;
     virtual void setShadingMode(ShadingMode shading) = 0;
     virtual void draw(QVector3D& lightPosition, const QVector3D& lightColor, const QMatrix4x4& projectionTransform) = 0;
 };

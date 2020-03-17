@@ -5,6 +5,10 @@
 #include <QOpenGLFunctions_3_3_Core>
 #include <QImage>
 
+/**
+ * @brief The Texture class
+ * A self-allocating and destructing texture class.
+ */
 class Texture
 {
 private:

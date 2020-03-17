@@ -1,5 +1,5 @@
 #include "texture.h"
-
+#include <iostream>
 #include <QOpenGLFunctions>
 
 Texture::Texture(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef,  const std::string& filepath) : f(f), ef(ef), path(filepath) {

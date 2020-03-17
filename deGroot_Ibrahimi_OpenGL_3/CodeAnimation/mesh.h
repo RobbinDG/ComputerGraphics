@@ -8,7 +8,12 @@
 #include <QOpenGLShaderProgram>
 #include <QMatrix4x4>
 
-class Mesh : Drawable
+/**
+ * @brief The Mesh class
+ * An OpenGL drawable mesh with necessary methods to transform it.
+ * Allocates and destroys itself for proper abstraction.
+ */
+class Mesh : public Drawable
 {
 public:
 
@@ -40,16 +45,16 @@ private:
     GLint uniformTextureSamplerPhong;
 
 public:
-    Mesh(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef, const std::string& filepath, const Texture& texture);
+    Mesh(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef, const std::string& filepath, Texture texture);
     ~Mesh();
     void setTranslation(const QVector3D& t) override;
-    void translate(const QVector3D& t);
+    void translate(const QVector3D& t) override;
     void setRotation(const QVector3D& r) override;
     void setScale(float s) override;
     void setTransform(const QVector3D& t, const QVector3D& r, float s) override;
     void resetTransform() override;
     void transform(const QVector3D& t, const QVector3D& r, float s) override;
-    void transform(const QMatrix4x4& m);
+    void transform(const QMatrix4x4& m) override;
     void preTransform(const QMatrix4x4& m);
     void updateTransform();
     void setShadingMode(ShadingMode shading) override;

@@ -8,14 +8,15 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
 
-
+/**
+ * @brief The Scene class
+ * A scene object. Acts as a collection for drawable objects.
+ * Enables transformation wrt the scene origin.
+ */
 class Scene
 {
 private:
     std::vector<Drawable*> _objects;
-
-    QOpenGLFunctions* glf;
-    QOpenGLExtraFunctions* glef;
 
     // Phong model constants.
     QVector3D lightPosition = {0.0F, 100.0F, 0.0F};
@@ -30,13 +31,7 @@ public:
     Scene();
     ~Scene();
 
-    /**
-     * @brief addMesh creates and adds mesh to scene.
-     * @return the mesh index in the scene.
-     */
-    void init(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef);
     size_t addObject(Drawable* obj);
-    size_t addMesh(const std::string& meshpath, const std::string& texturepath);
     Drawable* getObject(size_t idx);
     const std::vector<Drawable*> meshes();
     void draw();
