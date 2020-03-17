@@ -1,6 +1,6 @@
 #include "animation.h"
 
-Animation::Animation(int duration) : resetFrame(duration) {}
+Animation::Animation(int duration) : frame(0), resetFrame(duration) {}
 
 Animation::~Animation() {}
 

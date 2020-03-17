@@ -10,6 +10,7 @@ CONFIG += c++14
 SOURCES += \
     animatedmesh.cpp \
     animation.cpp \
+    backandforthanimation.cpp \
     drawable.cpp \
     localrotateanimation.cpp \
     main.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
 HEADERS += \
     animatedmesh.h \
     animation.h \
+    backandforthanimation.h \
     drawable.h \
     localrotateanimation.h \
     mainwindow.h \

@@ -43,6 +43,7 @@ public:
     Mesh(QOpenGLFunctions* f, QOpenGLExtraFunctions* ef, const std::string& filepath, const Texture& texture);
     ~Mesh();
     void setTranslation(const QVector3D& t) override;
+    void translate(const QVector3D& t);
     void setRotation(const QVector3D& r) override;
     void setScale(float s) override;
     void setTransform(const QVector3D& t, const QVector3D& r, float s) override;
