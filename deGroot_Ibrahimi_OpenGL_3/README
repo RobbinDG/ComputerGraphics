@@ -24,5 +24,9 @@ Advanced vertex manipulation:
     - Time = 1
     - Phi = 0
 
+ - As a bonus, a selector for a droplet shader was added. This follows the function
+   f(u,v,t) = A * sin(2pi * f * ((u - cx)^2 + (v - cy)^2) + t + phi)
+   where cx and cy are the center coordinates of the mesh. To achieve this, a waveDV function was added, which updates the V coordinate.
+
 Suggestions:
 It was a bit unclear from the assignment and TA interaction whether a light source should stay fixed, or get transformed along with the object(s). Maybe this could be improved next year. Moreover, the template code had a GUI bug that resulted in strange controls on machines running macOS. A TA luckily helped me solve this fairly quickly, but it would be nice if this could be fixed from the beginning to prevent confusion. Overall it was a very nice and clear assignment, well done!

@@ -112,17 +112,17 @@ void MainView::createShaderProgram(int idx, const std::string& vert, const std::
     shaderProgram[idx].link();
 
     // Get the uniforms for the shader program.
-    uniformModelViewTransform  = shaderProgram[idx].uniformLocation("modelViewTransform");
-    uniformProjectionTransform = shaderProgram[idx].uniformLocation("projectionTransform");
-    uniformNormalTransform     = shaderProgram[idx].uniformLocation("normalTransform");
-    uniformMaterial            = shaderProgram[idx].uniformLocation("material");
-    uniformLightPosition       = shaderProgram[idx].uniformLocation("lightPosition");
-    uniformLightColor          = shaderProgram[idx].uniformLocation("lightColor");
-    uniformTextureSampler      = shaderProgram[idx].uniformLocation("textureSampler");
-    uniformAmplitude           = shaderProgram[idx].uniformLocation("amplitude");
-    uniformFrequency           = shaderProgram[idx].uniformLocation("frequency");
-    uniformPhase               = shaderProgram[idx].uniformLocation("phase");
-    uniformTime                = shaderProgram[idx].uniformLocation("time");
+    uniformModelViewTransform[idx]  = shaderProgram[idx].uniformLocation("modelViewTransform");
+    uniformProjectionTransform[idx] = shaderProgram[idx].uniformLocation("projectionTransform");
+    uniformNormalTransform[idx]     = shaderProgram[idx].uniformLocation("normalTransform");
+    uniformMaterial[idx]            = shaderProgram[idx].uniformLocation("material");
+    uniformLightPosition[idx]       = shaderProgram[idx].uniformLocation("lightPosition");
+    uniformLightColor[idx]          = shaderProgram[idx].uniformLocation("lightColor");
+    uniformTextureSampler[idx]      = shaderProgram[idx].uniformLocation("textureSampler");
+    uniformAmplitude[idx]           = shaderProgram[idx].uniformLocation("amplitude");
+    uniformFrequency[idx]           = shaderProgram[idx].uniformLocation("frequency");
+    uniformPhase[idx]               = shaderProgram[idx].uniformLocation("phase");
+    uniformTime[idx]                = shaderProgram[idx].uniformLocation("time");
 }
 
 void MainView::loadMesh() {
@@ -224,21 +224,21 @@ void MainView::resizeGL(int newWidth, int newHeight) {
 }
 
 void MainView::updateUniforms() {
-    glUniformMatrix4fv(uniformProjectionTransform, 1, GL_FALSE, projectionTransform.data());
-    glUniformMatrix4fv(uniformModelViewTransform, 1, GL_FALSE, meshTransform.data());
-    glUniformMatrix3fv(uniformNormalTransform, 1, GL_FALSE, meshNormalTransform.data());
+    glUniformMatrix4fv(uniformProjectionTransform[currentShader], 1, GL_FALSE, projectionTransform.data());
+    glUniformMatrix4fv(uniformModelViewTransform[currentShader], 1, GL_FALSE, meshTransform.data());
+    glUniformMatrix3fv(uniformNormalTransform[currentShader], 1, GL_FALSE, meshNormalTransform.data());
 
-    glUniform4fv(uniformMaterial, 1, &material[0]);
-    glUniform3fv(uniformLightPosition, 1, &lightPosition[0]);
-    glUniform3f(uniformLightColor, lightColor.x(), lightColor.y(), lightColor.z());
+    glUniform4fv(uniformMaterial[currentShader], 1, &material[0]);
+    glUniform3fv(uniformLightPosition[currentShader], 1, &lightPosition[0]);
+    glUniform3f(uniformLightColor[currentShader], lightColor.x(), lightColor.y(), lightColor.z());
 
-    glUniform1i(uniformTextureSampler, 0);
+    glUniform1i(uniformTextureSampler[currentShader], 0);
 
-    glUniform1fv(uniformAmplitude, NUMBER_OF_WAVES, amplitude);
-    glUniform1fv(uniformFrequency, NUMBER_OF_WAVES, frequency);
-    glUniform1fv(uniformPhase, NUMBER_OF_WAVES, phase);
+    glUniform1fv(uniformAmplitude[currentShader], NUMBER_OF_WAVES, amplitude);
+    glUniform1fv(uniformFrequency[currentShader], NUMBER_OF_WAVES, frequency);
+    glUniform1fv(uniformPhase[currentShader], NUMBER_OF_WAVES, phase);
 
-    glUniform1f(uniformTime, time);
+    glUniform1f(uniformTime[currentShader], time);
 }
 
 void MainView::updateProjectionTransform() {

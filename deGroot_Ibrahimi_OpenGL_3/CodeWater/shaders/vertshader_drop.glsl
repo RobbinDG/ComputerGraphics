@@ -30,7 +30,7 @@ out vec3 materialColor;
 out vec3 vertexCoord;
 out vec3 relativeLightPosition;
 
-// Calculates the normal based on the derivative of the water function f(u,t) = A * sin(2pi * f * u + t + phi)
+// Calculates the normal based on the derivative of the water function f(u,v,t) = A * sin(2pi * f * ((u - cx)^2 + (v - cy)^2) + t + phi)
 float waveDU(int waveIdx, float u, float v) {
     return u * 2.0 * M_PI * frequency[waveIdx] * amplitude[waveIdx] * cos(2.0 * M_PI * frequency[waveIdx] * (u * u + v * v) + -time + phase[waveIdx]);
 }
@@ -39,7 +39,7 @@ float waveDV(int waveIdx, float u, float v) {
     return v * 2.0 * M_PI * frequency[waveIdx] * amplitude[waveIdx] * cos(2.0 * M_PI * frequency[waveIdx] * (u * u + v * v) + -time + phase[waveIdx]);
 }
 
-// Calculates the displacement of the z coordinate based on the derivative of the water function f(u,t) = A * sin(2pi * f * u + t + phi)
+// Calculates the displacement of the z coordinate based on the derivative of the water function f(u,v,t) = A * sin(2pi * f * ((u - cx)^2 + (v - cy)^2) + t + phi)
 float waveHeight(int waveIdx, float u, float v) {
     return amplitude[waveIdx] * sin(2.0 * M_PI * frequency[waveIdx] * (u * u + v * v) + -time + phase[waveIdx]);
 }
@@ -50,7 +50,7 @@ void main()
     int waveIdx;
     float z = 0, dU = 0, dV = 0;
 
-    // Get the z and dU component
+    // Get the z and dU, dV component
     for (waveIdx = 0; waveIdx < NUMBER_OF_WAVES; waveIdx++) {
         z += waveHeight(waveIdx, uvCoordinates.x, uvCoordinates.y);
         dU += waveDU(waveIdx, uvCoordinates.x, uvCoordinates.y);

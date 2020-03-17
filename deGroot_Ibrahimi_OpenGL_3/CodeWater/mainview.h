@@ -29,20 +29,20 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QOpenGLShaderProgram shaderProgram[2];
 
     // Uniforms for the shader program.
-    GLint uniformModelViewTransform;
-    GLint uniformProjectionTransform;
-    GLint uniformNormalTransform;
+    GLint uniformModelViewTransform[2];
+    GLint uniformProjectionTransform[2];
+    GLint uniformNormalTransform[2];
 
-    GLint uniformMaterial;
-    GLint uniformLightPosition;
-    GLint uniformLightColor;
+    GLint uniformMaterial[2];
+    GLint uniformLightPosition[2];
+    GLint uniformLightColor[2];
 
-    GLint uniformTextureSampler;
+    GLint uniformTextureSampler[2];
 
-    GLint uniformAmplitude;
-    GLint uniformFrequency;
-    GLint uniformPhase;
-    GLint uniformTime;
+    GLint uniformAmplitude[2];
+    GLint uniformFrequency[2];
+    GLint uniformPhase[2];
+    GLint uniformTime[2];
 
     // Buffers
     GLuint meshVAO;
