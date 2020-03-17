@@ -1,7 +1,9 @@
 The changes we made are the following:
 
 Common animation:
-
+ - We implemented a simple scene matching all requirements. Movement is possible using WASD + up and down arrows.
+ - The code has been transformed to be reusable and properly object oriented for easy scene construction. Animations can be reused for multiple objects (not done in this scene)
+ - We implemented 2 animation classes, but more can easily be created. An animation can be paired with a drawable object in order to animate it easily.
 
 Advanced vertex manipulation:
  - We implemented everything that was explained in the assignment. Luckily, we did not encounter any issues with this sub-assignment as everything went fairly smoothly.
