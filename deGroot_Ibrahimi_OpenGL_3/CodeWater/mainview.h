@@ -26,7 +26,7 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QOpenGLDebugLogger debugLogger;
     QTimer timer; // Timer used for animation.
 
-    QOpenGLShaderProgram shaderProgram;
+    QOpenGLShaderProgram shaderProgram[2];
 
     // Uniforms for the shader program.
     GLint uniformModelViewTransform;
@@ -69,7 +69,7 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
 public:
     enum ShadingMode : GLuint
     {
-        PHONG = 0, NORMAL, GOURAUD
+        WAVE = 0, DROPLET
     };
 
     MainView(QWidget *parent = 0);
@@ -100,7 +100,8 @@ private slots:
     void onMessageLogged( QOpenGLDebugMessage Message );
 
 private:
-    void createShaderProgram();
+    void setupShaders();
+    void createShaderProgram(int idx, const std::string& vert, const std::string& frag);
     void loadMesh();
 
     // Loads texture data into the buffer with the name textureName.
@@ -120,7 +121,7 @@ private:
     QVector<quint8> imageToBytes(QImage image);
 
     // The current shader to use.
-    ShadingMode currentShader = PHONG;
+    ShadingMode currentShader = WAVE;
 
     // Wave arrays
     GLfloat amplitude[NUMBER_OF_WAVES];

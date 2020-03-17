@@ -87,7 +87,7 @@ void MainView::initializeGL() {
     glDepthFunc(GL_LEQUAL);
     glClearColor(0.2F, 0.5F, 0.7F, 0.0F);
 
-    createShaderProgram();
+    setupShaders();
     loadMesh();
 //    loadTextures();
 
@@ -100,26 +100,29 @@ void MainView::initializeGL() {
     timer.start(1000.0 / 60.0);
 }
 
-void MainView::createShaderProgram() {
+void MainView::setupShaders() {
+    createShaderProgram(0, ":/shaders/vertshader_water.glsl", ":/shaders/fragshader_water.glsl");
+    createShaderProgram(1, ":/shaders/vertshader_drop.glsl", ":/shaders/fragshader_drop.glsl");
+}
+
+void MainView::createShaderProgram(int idx, const std::string& vert, const std::string& frag) {
     // Create Water shader program.
-    shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex,
-                                           ":/shaders/vertshader_water.glsl");
-    shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment,
-                                           ":/shaders/fragshader_water.glsl");
-    shaderProgram.link();
+    shaderProgram[idx].addShaderFromSourceFile(QOpenGLShader::Vertex, vert.c_str());
+    shaderProgram[idx].addShaderFromSourceFile(QOpenGLShader::Fragment, frag.c_str());
+    shaderProgram[idx].link();
 
     // Get the uniforms for the shader program.
-    uniformModelViewTransform  = shaderProgram.uniformLocation("modelViewTransform");
-    uniformProjectionTransform = shaderProgram.uniformLocation("projectionTransform");
-    uniformNormalTransform     = shaderProgram.uniformLocation("normalTransform");
-    uniformMaterial            = shaderProgram.uniformLocation("material");
-    uniformLightPosition       = shaderProgram.uniformLocation("lightPosition");
-    uniformLightColor          = shaderProgram.uniformLocation("lightColor");
-    uniformTextureSampler      = shaderProgram.uniformLocation("textureSampler");
-    uniformAmplitude           = shaderProgram.uniformLocation("amplitude");
-    uniformFrequency           = shaderProgram.uniformLocation("frequency");
-    uniformPhase               = shaderProgram.uniformLocation("phase");
-    uniformTime                = shaderProgram.uniformLocation("time");
+    uniformModelViewTransform  = shaderProgram[idx].uniformLocation("modelViewTransform");
+    uniformProjectionTransform = shaderProgram[idx].uniformLocation("projectionTransform");
+    uniformNormalTransform     = shaderProgram[idx].uniformLocation("normalTransform");
+    uniformMaterial            = shaderProgram[idx].uniformLocation("material");
+    uniformLightPosition       = shaderProgram[idx].uniformLocation("lightPosition");
+    uniformLightColor          = shaderProgram[idx].uniformLocation("lightColor");
+    uniformTextureSampler      = shaderProgram[idx].uniformLocation("textureSampler");
+    uniformAmplitude           = shaderProgram[idx].uniformLocation("amplitude");
+    uniformFrequency           = shaderProgram[idx].uniformLocation("frequency");
+    uniformPhase               = shaderProgram[idx].uniformLocation("phase");
+    uniformTime                = shaderProgram[idx].uniformLocation("time");
 }
 
 void MainView::loadMesh() {
@@ -193,7 +196,7 @@ void MainView::paintGL() {
     time += 1.0/60.0;
 
     // Choose the selected shader.
-    shaderProgram.bind();
+    shaderProgram[currentShader].bind();
     updateUniforms();
 
     // Set the texture and draw the mesh. Disabled because unnecessary for this project
@@ -203,7 +206,7 @@ void MainView::paintGL() {
     glBindVertexArray(meshVAO);
     glDrawArrays(GL_TRIANGLES, 0, meshSize);
 
-    shaderProgram.release();
+    shaderProgram[currentShader].release();
 }
 
 /**

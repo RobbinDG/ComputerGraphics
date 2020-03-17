@@ -218,9 +218,9 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QRadioButton" name="PhongButton">
+           <widget class="QRadioButton" name="WaveButton">
             <property name="text">
-             <string>Pho&amp;ng</string>
+             <string>Wave</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -228,16 +228,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="NormalButton">
+           <widget class="QRadioButton" name="DropletButton">
             <property name="text">
-             <string>Nor&amp;mal</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="GouraudButton">
-            <property name="text">
-             <string>&amp;Gouraud</string>
+             <string>Droplet</string>
             </property>
            </widget>
           </item>
